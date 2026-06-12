@@ -60,7 +60,17 @@
   .site-nav a:hover{color:#fff}
   .site-nav .cta{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:9px 18px;color:#fff}
   .site-nav .cta:hover{border-color:var(--accent);background:rgba(127,195,255,.08)}
-  @media(max-width:680px){ .site-nav a:not(.cta){display:none} .b-tag{display:none} }
+  @media(max-width:680px){
+    .site-nav a:not(.cta){display:none}
+    .site-header{padding:12px 16px}
+    .brand{gap:10px}
+    .brand svg{width:22px;height:22px}
+    .b-name{font-size:15px;letter-spacing:.13em}
+    .b-tag{font-size:9.5px;letter-spacing:.26em;margin-top:4px}
+    .site-nav .cta{padding:8px 14px;font-size:11px;letter-spacing:.12em}
+    .client-wall{gap:13px 22px}
+    .client-wall span{font-size:clamp(16px,4.6vw,21px)}
+  }
 
   /* HERO */
   .hero{
@@ -261,7 +271,9 @@
     function build(){
       nodes=[]; edges=[];
       const cx=w/2, cy=h*0.58;
-      const s=Math.max(96, Math.min(w,h)*0.122);   // larger grid
+      const small=Math.min(w,h)<560;
+      const s=small ? Math.max(24, Math.min(w,h)*0.085)      // shrink so it fits a phone
+                    : Math.max(96, Math.min(w,h)*0.122);
       const sx=s, sy=s*0.56;
 
       // --- structured iso grid (the diamond mark) ---
@@ -385,16 +397,17 @@
       }
 
       // service labels — fade in as each node wires in, brighten gently with glow
-      const fs = innerWidth<700 ? 10 : Math.max(12, Math.min(16, Math.min(w,h)*0.016));
+      const small = Math.min(w,h)<560;
+      const fs = small ? 10 : Math.max(12, Math.min(16, Math.min(w,h)*0.016));
       ctx.font='600 '+fs+'px -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif';
       ctx.textBaseline='middle';
-      try{ ctx.letterSpacing='0.5px'; }catch(_){}
+      try{ ctx.letterSpacing= small?'0.2px':'0.5px'; }catch(_){}
       for(const n of nodes){
         if(!n.label) continue;
         const a=Math.min(.96, n.lit*(0.66+0.34*n.glow));
         if(a<=0.02) continue;
-        const lx=n.x + n.lox*16;
-        const ly=n.y + n.loy*(fs*1.5+8);
+        const lx=n.x + n.lox*(small?9:16);
+        const ly=n.y + n.loy*(fs*(small?1.25:1.5)+(small?5:8));
         ctx.textAlign=n.lal;
         ctx.shadowBlur=10; ctx.shadowColor='rgba(0,0,0,.85)';
         ctx.fillStyle='rgba(255,255,255,'+a+')';
