@@ -270,8 +270,9 @@
 
     function build(){
       nodes=[]; edges=[];
-      const cx=w/2, cy=h*0.58;
+      const cx=w/2;
       const small=Math.min(w,h)<560;
+      const cy=h*(small?0.46:0.58);                          // raise the grid on phones
       const s=small ? Math.max(24, Math.min(w,h)*0.085)      // shrink so it fits a phone
                     : Math.max(96, Math.min(w,h)*0.122);
       const sx=s, sy=s*0.56;
