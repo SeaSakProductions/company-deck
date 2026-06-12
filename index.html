@@ -334,7 +334,7 @@
       const s=small ? Math.max(26, Math.min(w,h)*0.092)      // shrink so it fits a phone
                     : Math.max(96, Math.min(w,h)*0.122);
       const sx=s, sy=s*0.56;
-      const cy=small ? Math.min(h*0.5, 96 + 3*sy)            // anchor just under the header on phones
+      const cy=small ? Math.min(h*0.5, (h*0.46 + (96 + 3*sy))/2)   // split the difference on phones
                      : h*0.58;
 
       // --- structured iso grid (the diamond mark) ---
