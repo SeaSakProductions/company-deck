@@ -75,14 +75,36 @@
   .site-nav a:hover{color:#fff}
   .site-nav .cta{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:9px 18px;color:#fff}
   .site-nav .cta:hover{border-color:var(--accent);background:rgba(127,195,255,.08)}
+
+  /* mobile hamburger + dropdown */
+  .menu-toggle{
+    display:none;width:30px;height:20px;flex-direction:column;justify-content:space-between;
+    background:none;border:0;padding:0;cursor:pointer;
+  }
+  .menu-toggle span{display:block;height:2px;width:100%;background:#e9edf2;border-radius:2px;transition:transform .25s ease,opacity .2s ease}
+  .menu-toggle.open span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+  .menu-toggle.open span:nth-child(2){opacity:0}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+  .mobile-menu{
+    display:none;position:fixed;top:0;left:0;right:0;z-index:55;
+    flex-direction:column;background:rgba(8,9,12,.97);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    padding:74px 0 12px;border-bottom:1px solid var(--line);
+    transform:translateY(-105%);transition:transform .32s ease;
+  }
+  .mobile-menu.open{transform:translateY(0)}
+  .mobile-menu a{padding:16px 26px;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--text);border-top:1px solid var(--line)}
+  .mobile-menu a:first-child{border-top:0}
+
   @media(max-width:680px){
-    .site-nav a:not(.cta){display:none}
-    .site-header{padding:12px 16px}
+    .site-nav{display:none}
+    .menu-toggle{display:flex}
+    .mobile-menu{display:flex}
+    .site-header{padding:13px 18px}
     .brand{gap:10px}
     .brand svg{width:22px;height:22px}
     .b-name{font-size:15px;letter-spacing:.13em}
     .b-tag{font-size:9.5px;letter-spacing:.26em;margin-top:4px}
-    .site-nav .cta{padding:8px 14px;font-size:11px;letter-spacing:.12em}
     .client-wall{gap:13px 22px}
     .client-wall span{font-size:clamp(16px,4.6vw,21px)}
   }
@@ -194,7 +216,16 @@
     <a href="#clients">Clients</a>
     <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
   </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#events">Events</a>
+  <a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="top">
@@ -264,6 +295,19 @@
   },{threshold:.15});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
+  // mobile menu toggle
+  (function(){
+    const mt=document.getElementById('menuToggle'), mm=document.getElementById('mobileMenu');
+    if(!mt||!mm) return;
+    const close=()=>{ mm.classList.remove('open'); mt.classList.remove('open'); mt.setAttribute('aria-expanded','false'); };
+    mt.addEventListener('click',()=>{
+      const open=mm.classList.toggle('open');
+      mt.classList.toggle('open',open);
+      mt.setAttribute('aria-expanded',open?'true':'false');
+    });
+    mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+  })();
+
   /* ---------------------------------------------------------
      HERO web:
        • the lattice wires itself in once on load
@@ -287,10 +331,11 @@
       nodes=[]; edges=[];
       const cx=w/2;
       const small=Math.min(w,h)<560;
-      const cy=h*(small?0.46:0.58);                          // raise the grid on phones
-      const s=small ? Math.max(24, Math.min(w,h)*0.085)      // shrink so it fits a phone
+      const s=small ? Math.max(26, Math.min(w,h)*0.092)      // shrink so it fits a phone
                     : Math.max(96, Math.min(w,h)*0.122);
       const sx=s, sy=s*0.56;
+      const cy=small ? Math.min(h*0.5, 96 + 3*sy)            // anchor just under the header on phones
+                     : h*0.58;
 
       // --- structured iso grid (the diamond mark) ---
       const gi={};
