@@ -343,7 +343,7 @@
         const ix=(i-j), iy=(i+j)-(N-1);
         const x=cx+ix*sx, y=cy+iy*sy;
         gi[i+','+j]=nodes.length;
-        nodes.push({x,y,bx:x,by:y,structured:true,phase:Math.random()*6.28,
+        nodes.push({x,y,bx:x,by:y,gi:i,gj:j,structured:true,phase:Math.random()*6.28,
           pulse:Math.random()*6.28, pspeed:0.11+Math.random()*0.13, lit:0, litT:0, glow:0, r:2.8});
       }
       // --- floating zodiac nodes ---
@@ -391,7 +391,13 @@
       const isCore=e=>nodes[e.a].structured&&nodes[e.b].structured;
       const core=ded.filter(isCore).sort((a,b)=>{const m=mid(a),n=mid(b);return distC(m[0],m[1],cx,cy)-distC(n[0],n[1],cx,cy);});
       const flo =ded.filter(e=>!isCore(e)).sort((a,b)=>{const m=mid(a),n=mid(b);return distC(m[0],m[1],cx,cy)-distC(n[0],n[1],cx,cy);});
-      core.forEach((e,i)=>{ e.activateAt=(i/Math.max(1,core.length-1))*(BUILD*0.45); e.core=true; });
+      // centrality is per-CHAIN so a whole central grid line lights up evenly along its length
+      const ctr=(N-1)/2, span=Math.max(1e-6,ctr-0.5);
+      core.forEach((e,i)=>{ e.activateAt=(i/Math.max(1,core.length-1))*(BUILD*0.45); e.core=true;
+        const A=nodes[e.a],B=nodes[e.b];
+        const chain=(A.gi===B.gi)?A.gi:A.gj;                 // which diagonal line of the diamond
+        e.central=1-Math.min(1,Math.max(0,(Math.abs(chain-ctr)-0.5)/span));
+        e.border=(chain===0||chain===N-1)?1:0; });           // outer frame of the grid box
       flo.forEach((e,i)=>{ e.activateAt=(BUILD*0.35)+(i/Math.max(1,flo.length-1))*(BUILD*0.65); });
       edges=core.concat(flo);
     }
@@ -435,13 +441,15 @@
         const reveal=Math.min(A.lit,B.lit);
         if(reveal<=0.01) continue;
         const g=(A.glow+B.glow)/2;
-        const base=e.core?0.10:0.05;
-        const o=Math.min(0.9,(base+g*0.40+e.energy*0.42)*fade*reveal);
+        const cen=e.central||0;                       // 0..1, strongest at the diamond's center
+        const emph=Math.max(cen, (e.border||0)*0.7);  // center cross strongest, outer frame a notch below
+        const base=(e.core?0.10:0.05) + emph*0.22;    // emphasised lines read brighter
+        const o=Math.min(0.95,(base+g*0.40+e.energy*0.42)*fade*reveal);
         if(o<=0.01) continue;
-        const mix=Math.min(1, g*0.45 + e.energy*0.7);
+        const mix=Math.min(1, g*0.45 + e.energy*0.7 + emph*0.55);
         const v=(216+39*mix)|0;          // soft white, a touch brighter where a line glows
         ctx.strokeStyle='rgba('+v+','+v+','+v+','+o+')';
-        ctx.lineWidth=0.6 + g*0.7 + e.energy*0.7;
+        ctx.lineWidth=0.6 + g*0.7 + e.energy*0.7 + emph*1.2;
         ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
       }
 
@@ -449,11 +457,17 @@
       for(const n of nodes){
         if(n.lit<=0.01) continue;
         const g=n.glow;
-        ctx.shadowBlur=6 + g*16;
-        ctx.shadowColor='rgba(255,255,255,'+(0.4+g*0.5)+')';
-        const a=Math.min(1,(0.32+g*0.7)*n.lit);
-        ctx.fillStyle='rgba(255,255,255,'+a+')';
-        ctx.beginPath(); ctx.arc(n.x,n.y, n.r + g*1.7 + (n.structured?0.6:0), 0, 6.2832); ctx.fill();
+        const rr=n.r + g*1.9 + (n.structured?0.7:0);
+        // sky-blue accent bloom
+        ctx.shadowBlur=12 + g*30;
+        ctx.shadowColor='rgba(127,195,255,'+(0.5+g*0.5)+')';
+        ctx.fillStyle='rgba(190,222,255,'+Math.min(1,(0.30+g*0.55)*n.lit)+')';
+        ctx.beginPath(); ctx.arc(n.x,n.y, rr, 0, 6.2832); ctx.fill();
+        // bright white core
+        ctx.shadowBlur=7 + g*15;
+        ctx.shadowColor='rgba(255,255,255,'+(0.5+g*0.5)+')';
+        ctx.fillStyle='rgba(255,255,255,'+Math.min(1,(0.40+g*0.72)*n.lit)+')';
+        ctx.beginPath(); ctx.arc(n.x,n.y, rr*0.78, 0, 6.2832); ctx.fill();
         ctx.shadowBlur=0;
       }
 
