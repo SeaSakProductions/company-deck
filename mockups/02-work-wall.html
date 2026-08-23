@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — Mockup 2 · The Work Wall</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     DIRECTION 2 — THE WORK WALL
+     The hero IS the work: an asymmetric mosaic of event stills,
+     festival next to keynote next to gala, so the range is the
+     first thing you see. The node-web survives only as hairline
+     gutters and lit intersections framing the grid.
+     ============================================================ */
+  .ww-hero{position:relative;min-height:100vh;overflow:hidden;background:rgba(127,195,255,.16)}
+  .ww-grid{
+    position:absolute;inset:0;display:grid;
+    grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,1fr);
+    gap:1px;
+  }
+  .ww-grid .slot{
+    opacity:0;transform:scale(1.03);
+    animation:tileIn 1.1s cubic-bezier(.2,.7,.25,1) forwards;
+    transition:filter .45s ease;
+  }
+  @keyframes tileIn{to{opacity:1;transform:none}}
+  .ww-grid .slot:nth-child(1){animation-delay:.05s}
+  .ww-grid .slot:nth-child(2){animation-delay:.14s}
+  .ww-grid .slot:nth-child(3){animation-delay:.23s}
+  .ww-grid .slot:nth-child(4){animation-delay:.32s}
+  .ww-grid .slot:nth-child(5){animation-delay:.41s}
+  .ww-grid .slot:nth-child(6){animation-delay:.50s}
+  .ww-grid .slot:nth-child(7){animation-delay:.59s}
+  /* hovering one tile pushes the rest back — the wall reacts as a system */
+  .ww-grid:hover .slot{filter:brightness(.62) saturate(.7)}
+  .ww-grid .slot:hover{filter:brightness(1.18) saturate(1.05)}
+
+  .t1{grid-column:1/4;  grid-row:1/5}
+  .t2{grid-column:1/4;  grid-row:5/9}
+  .t3{grid-column:4/8;  grid-row:1/3}
+  .t4{grid-column:8/11; grid-row:1/3}
+  .t5{grid-column:11/13;grid-row:1/6}
+  .t6{grid-column:11/13;grid-row:6/9}
+  .t7{grid-column:4/11; grid-row:7/9}
+  /* the top row sits under the fixed header — drop its kickers clear of it */
+  .t1 .slot__kicker,.t3 .slot__kicker,.t4 .slot__kicker,.t5 .slot__kicker{top:88px}
+
+  /* --- lit intersections: the node-web, reduced to punctuation --- */
+  .ww-nodes{position:absolute;inset:0;z-index:5;pointer-events:none}
+  .ww-nodes i{
+    position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;
+    background:#fff;box-shadow:0 0 10px 1px rgba(255,255,255,.6),0 0 18px 4px rgba(127,195,255,.5);
+    opacity:0;animation:nodeIn .8s ease forwards, nodeBreathe 6s ease-in-out infinite;
+  }
+  @keyframes nodeIn{to{opacity:1}}
+  @keyframes nodeBreathe{0%,100%{transform:scale(.86)}50%{transform:scale(1.14)}}
+
+  /* --- the message, floating over the wall --- */
+  /* the panel is a grid cell, not a floating box — it fills the hole the
+     mosaic leaves open, so the wall reads as one surface */
+  .ww-panel{
+    grid-column:4/11;grid-row:3/7;z-index:6;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:clamp(24px,3vw,42px);
+    background:rgba(6,8,12,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    box-shadow:0 30px 90px rgba(0,0,0,.7);
+    opacity:0;animation:panelIn 1.1s ease forwards .72s;
+  }
+  @keyframes panelIn{to{opacity:1}}
+  .ww-panel .mk{width:54px;height:54px;margin:0 auto 20px;display:block;filter:drop-shadow(0 0 16px rgba(127,195,255,.55))}
+  .ww-panel h1{
+    font-size:clamp(20px,2.5vw,34px);font-weight:700;letter-spacing:.04em;line-height:1.26;text-transform:uppercase;
+    background:linear-gradient(180deg,#fff,#dfe5ec 46%,#a7b0bd);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .ww-panel p{margin-top:16px;font-size:clamp(13px,1.35vw,15.5px);color:var(--muted);line-height:1.68;max-width:40ch;margin-left:auto;margin-right:auto}
+  .ww-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:22px}
+  .ww-tags span{
+    font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#cfd6dd;
+    padding:6px 11px;border:1px solid rgba(255,255,255,.15);border-radius:999px;
+  }
+
+  @media(max-width:900px){
+    .ww-hero{min-height:auto;padding-top:64px}
+    .ww-grid{position:relative;inset:auto;grid-template-columns:repeat(2,1fr);grid-template-rows:none;height:auto}
+    .ww-grid .slot{aspect-ratio:4/3}
+    .ww-grid:hover .slot{filter:none}
+    .t1,.t2,.t3,.t4,.t5,.t6,.t7{grid-column:auto;grid-row:auto}
+    .t1{grid-column:1/3;aspect-ratio:16/9}
+    .t7{grid-column:1/3;aspect-ratio:16/9}
+    .t1 .slot__kicker,.t3 .slot__kicker,.t4 .slot__kicker,.t5 .slot__kicker{top:12px}
+    .ww-nodes{display:none}
+    .ww-panel{grid-column:1/3;grid-row:1;padding:34px 22px 30px}
+    .ww-panel h1{font-size:clamp(18px,5.6vw,26px)}
+    .scroll-hint{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#work">Work</a><a href="#events">Events</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#work">Work</a><a href="#events">Events</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="ww-hero" id="top">
+  <div class="ww-grid">
+    <!-- deliberately interleaved: no music side and corporate side, just work -->
+    <div class="slot slot--music slot--stage    t1"><div class="slot__ph"></div><span class="slot__kicker">Festival</span><span class="slot__cap">Main stage — night · crowd · truss</span></div>
+    <div class="slot slot--corp  slot--ballroom t2"><div class="slot__ph"></div><span class="slot__kicker">Gala</span><span class="slot__cap">Ballroom — banquet · uplight · awards</span></div>
+    <div class="slot slot--corp  slot--keynote  t3"><div class="slot__ph"></div><span class="slot__kicker">Conference</span><span class="slot__cap">General session — LED wall · keynote</span></div>
+    <div class="slot slot--music slot--truck    t4"><div class="slot__ph"></div><span class="slot__kicker">Crew</span><span class="slot__cap">Stagehands on headset — build day</span></div>
+    <div class="slot slot--music slot--crowd    t5"><div class="slot__ph"></div><span class="slot__kicker">Concert</span><span class="slot__cap">Crowd at the rail — front of house</span></div>
+    <div class="slot slot--corp  slot--expo     t6"><div class="slot__ph"></div><span class="slot__kicker">Trade Show</span><span class="slot__cap">Exhibit floor — booth build</span></div>
+    <div class="slot slot--music slot--truck    t7"><div class="slot__ph"></div><span class="slot__kicker">Load-in</span><span class="slot__cap">Trucks at dawn — every show starts here</span></div>
+
+    <div class="ww-panel">
+      <svg class="mk" viewBox="0 0 120 120" aria-hidden="true">
+        <g stroke="rgba(255,255,255,.55)" stroke-width="2.5" fill="none">
+          <path d="M60 8 L112 60 L60 112 L8 60 Z"/><path d="M60 8 L60 112 M8 60 L112 60"/>
+        </g>
+        <g fill="#fff"><circle cx="60" cy="8" r="7"/><circle cx="112" cy="60" r="7"/>
+        <circle cx="60" cy="112" r="7"/><circle cx="8" cy="60" r="7"/><circle cx="60" cy="60" r="9"/></g>
+      </svg>
+      <h1>One crew.<br>Every kind of room.</h1>
+      <p>Festivals, arenas, ballrooms, expo halls and parking lots. Full-scope production and the people who make show day work.</p>
+      <div class="ww-tags">
+        <span>Festivals</span><span>Concerts</span><span>Corporate</span>
+        <span>Galas</span><span>Trade Shows</span><span>Activations</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ww-nodes" aria-hidden="true">
+    <i style="left:25%;top:50%;   animation-delay:.9s,.9s"></i>
+    <i style="left:25%;top:0%;    animation-delay:1.0s,1.0s"></i>
+    <i style="left:58.33%;top:25%;animation-delay:1.1s,1.1s"></i>
+    <i style="left:83.33%;top:25%;animation-delay:1.2s,1.2s"></i>
+    <i style="left:83.33%;top:62.5%;animation-delay:1.3s,1.3s"></i>
+    <i style="left:25%;top:75%;   animation-delay:1.4s,1.4s"></i>
+    <i style="left:83.33%;top:75%;animation-delay:1.5s,1.5s"></i>
+    <i style="left:25%;top:100%;  animation-delay:1.6s,1.6s"></i>
+  </div>
+
+  <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
+</section>
+
+<!-- ================= STATEMENT ================= -->
+<section class="statement">
+  <p class="reveal">Every part of your event, <span class="accent">runs as one.</span></p>
+  <p class="sub reveal">Full-scope event production — staging, power, logistics, labor, and the people who make show day work. Music festivals, conferences, brand activations, private events. The discipline doesn't change with the guest list.</p>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="services" id="work">
+  <div class="svc-label reveal">What We Run</div>
+  <div class="svc-list reveal">
+    <div class="svc-row"><span class="dot"></span><span class="name">Staging</span><span class="desc">Main stage, sub-stages, risers, roof systems</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Power</span><span class="desc">Distro, generators, shore tie-in, redundancy</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Trucking</span><span class="desc">Routing, load-in windows, dock and yard control</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Labor</span><span class="desc">Stagehands, forklifts, steward and call management</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Design</span><span class="desc">Site plans, CAD, stage plots, sightlines</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Operations</span><span class="desc">Schedules, comms, vendor and venue coordination</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Hospitality</span><span class="desc">Catering, green rooms, travel, credentials</span></div>
+    <div class="svc-row"><span class="dot"></span><span class="name">Artist Advance</span><span class="desc">Riders, tech packs, day sheets, speaker prep</span></div>
+  </div>
+</section>
+
+<!-- ================= EVENTS ================= -->
+<section class="clients" id="events" style="padding:0 24px 13vh">
+  <div class="clients-label reveal">Selected Events</div>
+  <div class="client-wall reveal">
+    <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
+    <span>NFL Draft</span><span>Minnesota State Fair</span><span>Innings &amp; Extra Innings</span>
+    <span>Milwaukee Metal Fest</span><span>Point Break Fest</span>
+  </div>
+</section>
+
+<!-- ================= CLIENTS ================= -->
+<section class="clients" id="clients" style="padding:0 24px 20vh">
+  <div class="clients-label reveal">Clients</div>
+  <div class="client-wall reveal">
+    <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+    <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+    <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact">
+  <h2 class="reveal">Bring us the date.<br><span>We'll bring the show.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="mark">SEASAK PRODUCTIONS</div>
+    <div class="meta">Event Solutions</div>
+  </div>
+</footer>
+
+<div class="mk-badge">Mockup <b>2</b> · The Work Wall <a href="index.html">All four →</a></div>
+
+<script src="_shared.js"></script>
+</body>
+</html>

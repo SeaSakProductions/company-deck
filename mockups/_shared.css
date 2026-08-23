@@ -1,0 +1,320 @@
+/* ============================================================
+   SeaSak — shared brand shell for the home-page mockups
+   Tokens, header, photo-slot system, and the lower page
+   sections, lifted from the live index.html so each mockup
+   only has to differ in its hero.
+   ============================================================ */
+
+:root{
+  --bg:#050608;
+  --text:#e9edf2;
+  --muted:#8b93a1;
+  --faint:#5b626f;
+  --line:rgba(255,255,255,.09);
+  --accent:#7fc3ff;
+  --warm:#ff9a4d;         /* the music/festival side */
+  --cool:#7fc3ff;         /* the corporate side */
+  --maxw:1100px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
+}
+/* textured black: soft center cloud + edge vignette, with a film grain over it */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(ellipse 72% 58% at 50% 42%, rgba(150,162,182,.07), transparent 60%),
+    radial-gradient(ellipse 120% 120% at 50% 45%, transparent 38%, rgba(0,0,0,.62) 100%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='150'%20height='150'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:150px 150px;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;width:100%}
+
+/* ============================================================
+   PHOTO SLOTS
+   Every image on these mockups is a "slot". Until a real photo
+   exists it renders as a duotone gradient with the intended
+   subject printed on it, cropped exactly where the real photo
+   will sit. To drop in a real image later, set --img:
+       .slot--mainstage{ --img:url('photos/mainstage.jpg'); }
+   ...and the placeholder scaffolding hides itself.
+   ============================================================ */
+.slot{
+  position:relative;overflow:hidden;background:#0a0c10;
+  background-image:var(--img,none);background-size:cover;background-position:var(--pos,center);
+}
+/* Duotone wash. Every image carries BOTH palettes — a warm lean and a cool
+   lean — so festival and corporate work reads as one body of work with a
+   shift in temperature, not as two colour-coded camps. */
+.slot::before{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(150deg,var(--tint1,rgba(127,195,255,.16)),transparent 55%),
+    linear-gradient(310deg,var(--tint3,rgba(255,154,77,.10)),transparent 62%),
+    linear-gradient(20deg,var(--tint2,rgba(10,12,18,.85)),rgba(10,12,18,.25) 60%);
+}
+/* the fake "scene" — only drawn while --img is unset */
+.slot__ph{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 62% 44% at 50% 30%, var(--glow,rgba(127,195,255,.34)), transparent 70%),
+    repeating-linear-gradient(94deg, rgba(255,255,255,.045) 0 1px, transparent 1px 15px),
+    linear-gradient(180deg,#0d1117 0%,#0a0d13 46%,#070a0e 100%);
+}
+.slot__ph::after{ /* horizon / crowd line */
+  content:"";position:absolute;left:0;right:0;bottom:0;height:42%;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.72) 62%),
+             repeating-linear-gradient(78deg, rgba(0,0,0,.5) 0 3px, transparent 3px 9px);
+}
+.slot__cap{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  padding:12px 14px;
+  font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);font-weight:600;
+  background:linear-gradient(to top,rgba(0,0,0,.72),transparent);
+}
+.slot[style*="--img"] .slot__ph, .slot[data-has-img] .slot__ph{display:none}
+.slot__kicker{
+  position:absolute;top:12px;left:14px;z-index:3;
+  font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;font-weight:700;
+  color:#fff;padding:5px 10px;border:1px solid rgba(255,255,255,.24);border-radius:999px;
+  background:rgba(6,8,12,.5);backdrop-filter:blur(6px);
+}
+/* a lean, not a label — each keeps a trace of the other's temperature */
+.slot--music{--tint1:rgba(255,154,77,.17);--tint3:rgba(127,195,255,.11);--glow:rgba(255,160,90,.34)}
+.slot--corp {--tint1:rgba(127,195,255,.16);--tint3:rgba(255,154,77,.10);--glow:rgba(140,190,240,.30)}
+
+/* ------------------------------------------------------------
+   SCENE VARIANTS
+   Six stand-ins, drawn in CSS, so a layout can be judged before
+   the photography exists — a main stage should not look like a
+   ballroom. Each is replaced wholesale the moment --img is set.
+   ------------------------------------------------------------ */
+
+/* Kept deliberately faint. These stand in for photographs, so they read
+   as tone and direction of light — not as diagrams. Anything crisp enough
+   to look like an illustration competes with the layout being judged. */
+
+/* festival main stage at night — beams from above, crowd below */
+.slot--stage .slot__ph{
+  background:
+    repeating-conic-gradient(from 206deg at 50% -10%,
+      rgba(255,186,102,.05) 0deg 2deg, transparent 2deg 13deg),
+    radial-gradient(ellipse 44% 32% at 50% 24%, rgba(255,146,54,.42), transparent 74%),
+    linear-gradient(180deg,#131110 0%,#0b0908 52%,#060505 100%);
+}
+.slot--stage .slot__ph::after{
+  height:40%;
+  background:
+    radial-gradient(circle at 5px 7px, rgba(0,0,0,.48) 0 3.2px, transparent 3.4px),
+    linear-gradient(180deg,transparent,rgba(0,0,0,.6) 45%,rgba(0,0,0,.9));
+  background-size:14px 16px, 100% 100%;
+}
+
+/* crowd / audience — heads against front-of-house glow */
+.slot--crowd .slot__ph{
+  background:
+    radial-gradient(ellipse 58% 30% at 50% 10%, rgba(255,170,80,.34), transparent 76%),
+    linear-gradient(180deg,#141210 0%,#0a0908 60%,#050404 100%);
+}
+.slot--crowd .slot__ph::after{
+  height:70%;
+  background:
+    radial-gradient(circle at 5px 6px, rgba(0,0,0,.42) 0 3px, transparent 3.2px),
+    linear-gradient(180deg,transparent,rgba(0,0,0,.72) 60%);
+  background-size:13px 14px, 100% 100%;
+}
+
+/* load-in at dawn — trailers on the dock, cold flat light */
+.slot--truck .slot__ph{
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.045) 0 22%, transparent 22% 27%,
+                            rgba(255,255,255,.04) 27% 48%, transparent 48% 53%,
+                            rgba(255,255,255,.045) 53% 74%, transparent 74%),
+    linear-gradient(180deg, rgba(150,175,205,.10) 0 46%, transparent 46%),
+    linear-gradient(180deg,#0f1317 0%,#0b0f14 58%,#070a0d 100%);
+  background-size:100% 44%, 100% 100%, 100% 100%;
+  background-position:0 32%, 0 0, 0 0;
+  background-repeat:no-repeat;
+}
+.slot--truck .slot__ph::after{
+  height:32%;
+  background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.82));
+}
+
+/* corporate general session — soft LED spill, seated rows */
+.slot--keynote .slot__ph{
+  background:
+    radial-gradient(ellipse 34% 22% at 50% 30%, rgba(150,205,255,.34), transparent 72%),
+    linear-gradient(180deg,#0b1017 0%,#080d13 60%,#05080c 100%);
+}
+.slot--keynote .slot__ph::after{
+  height:44%;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.30) 0 6px, transparent 6px 14px),
+    linear-gradient(180deg,rgba(0,0,0,.20),rgba(0,0,0,.86));
+}
+
+/* gala ballroom — uplight on the back wall, tables in the round */
+.slot--ballroom .slot__ph{
+  background:
+    repeating-linear-gradient(90deg, rgba(255,170,90,.075) 0 9px, transparent 9px 74px),
+    linear-gradient(180deg, rgba(255,190,120,.07) 0 52%, transparent 52%),
+    linear-gradient(180deg,#151009 0%,#0d0a07 62%,#060504 100%);
+}
+.slot--ballroom .slot__ph::after{
+  height:46%;
+  background:
+    radial-gradient(circle at 22px 17px, rgba(255,225,190,.06) 0 11px, transparent 12px),
+    linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.84));
+  background-size:48px 38px, 100% 100%;
+}
+
+/* expo / trade show floor — booth blocks under even house light */
+.slot--expo .slot__ph{
+  background:
+    repeating-linear-gradient(90deg, rgba(190,215,240,.05) 0 40px, transparent 40px 50px),
+    repeating-linear-gradient(0deg,  rgba(190,215,240,.032) 0 30px, transparent 30px 40px),
+    linear-gradient(180deg,#121720 0%,#0d1219 60%,#080b10 100%);
+}
+.slot--expo .slot__ph::after{
+  height:34%;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.76));
+}
+
+/* full-bleed heroes magnify every pattern — damp them further there */
+.slot--soft .slot__ph{opacity:.55}
+.slot--soft .slot__ph::after{opacity:.8}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 34px;
+  background:linear-gradient(to bottom,rgba(6,7,10,.88),rgba(6,7,10,.5) 64%,transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none}
+.brand svg{filter:drop-shadow(0 0 7px rgba(255,255,255,.35));flex:none}
+.b-text{display:flex;flex-direction:column;justify-content:center}
+.b-name{
+  font-weight:800;letter-spacing:.2em;font-size:clamp(16px,2.1vw,21px);line-height:1;
+  background:linear-gradient(180deg,#ffffff,#cfd6dd 48%,#8b94a1);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.b-tag{font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;color:#a3abb7;font-weight:500;margin-top:6px}
+.site-nav{display:flex;align-items:center;gap:28px}
+.site-nav a{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.site-nav a:hover{color:#fff}
+.site-nav .cta{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:9px 18px;color:#fff}
+.site-nav .cta:hover{border-color:var(--accent);background:rgba(127,195,255,.08)}
+
+.menu-toggle{
+  display:none;width:30px;height:20px;flex-direction:column;justify-content:space-between;
+  background:none;border:0;padding:0;cursor:pointer;
+}
+.menu-toggle span{display:block;height:2px;width:100%;background:#e9edf2;border-radius:2px;transition:transform .25s ease,opacity .2s ease}
+.menu-toggle.open span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+.menu-toggle.open span:nth-child(2){opacity:0}
+.menu-toggle.open span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+.mobile-menu{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:55;
+  flex-direction:column;background:rgba(8,9,12,.97);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:74px 0 12px;border-bottom:1px solid var(--line);
+  transform:translateY(-105%);transition:transform .32s ease;
+}
+.mobile-menu.open{transform:translateY(0)}
+.mobile-menu a{padding:16px 26px;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--text);border-top:1px solid var(--line)}
+.mobile-menu a:first-child{border-top:0}
+
+/* ============================================================
+   LOWER SECTIONS (shared by all four directions)
+   ============================================================ */
+.statement{padding:20vh 24px;text-align:center}
+.statement p{font-size:clamp(24px,4.2vw,46px);font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:14ch;margin:0 auto}
+.statement .accent{background:linear-gradient(180deg,#fff,#9aa3b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.statement .sub{font-size:clamp(15px,1.8vw,18px);color:var(--muted);font-weight:400;letter-spacing:0;max-width:52ch;margin:34px auto 0;line-height:1.7}
+
+.services{padding:8vh 24px 20vh}
+.svc-label{text-align:center;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:60px}
+.svc-list{max-width:760px;margin:0 auto;border-top:1px solid var(--line)}
+.svc-row{display:flex;align-items:center;gap:22px;padding:26px 6px;border-bottom:1px solid var(--line);transition:padding-left .3s,color .3s}
+.svc-row .dot{flex:none;width:9px;height:9px;border-radius:50%;background:#fff;
+  box-shadow:0 0 12px 1px rgba(255,255,255,.5),0 0 4px rgba(127,195,255,.7);transition:transform .3s}
+.svc-row .name{font-size:clamp(20px,3vw,30px);font-weight:600;letter-spacing:-.01em}
+.svc-row .desc{margin-left:auto;font-size:14px;color:var(--muted);text-align:right;max-width:40%}
+.svc-row:hover{padding-left:18px}
+.svc-row:hover .dot{transform:scale(1.25);box-shadow:0 0 18px 3px rgba(127,195,255,.8)}
+
+.clients{padding:6vh 24px 20vh;text-align:center}
+.clients-label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:48px}
+.client-wall{display:flex;flex-wrap:wrap;justify-content:center;gap:18px 40px;max-width:860px;margin:0 auto}
+.client-wall span{
+  font-size:clamp(18px,2.6vw,28px);font-weight:600;letter-spacing:.01em;
+  transition:opacity .25s;white-space:nowrap;
+  background:linear-gradient(180deg,#cfd6dd,#7e8794);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.72;
+}
+.client-wall span:hover{opacity:1}
+
+.contact{padding:20vh 24px;text-align:center;border-top:1px solid var(--line)}
+.contact h2{font-size:clamp(28px,5vw,58px);font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-bottom:34px}
+.contact h2 span{background:linear-gradient(180deg,#fff,#9aa3b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mailto{display:inline-block;font-size:clamp(16px,2.2vw,22px);font-weight:500;padding-bottom:6px;border-bottom:1px solid var(--line);transition:border-color .25s,color .25s}
+.mailto:hover{border-color:var(--accent);color:#fff}
+
+footer{padding:54px 0;border-top:1px solid var(--line)}
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.foot .mark{font-weight:800;letter-spacing:.2em;font-size:15px;background:linear-gradient(180deg,#fff,#7e8794);-webkit-background-clip:text;background-clip:text;color:transparent}
+.foot .meta{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:6;
+  font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--faint);
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+}
+.scroll-hint .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:fall 1.8s ease-in-out infinite}
+@keyframes fall{0%{transform:translateY(-6px);opacity:0}40%{opacity:1}100%{transform:translateY(10px);opacity:0}}
+
+/* mockup badge — so it's obvious which direction you're looking at */
+.mk-badge{
+  position:fixed;left:14px;bottom:14px;z-index:90;
+  display:flex;align-items:center;gap:10px;
+  padding:9px 15px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);background:rgba(8,10,14,.82);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#cfd6dd;font-weight:600;
+}
+.mk-badge b{color:var(--accent);font-weight:700}
+.mk-badge a{color:var(--faint);border-left:1px solid rgba(255,255,255,.14);padding-left:10px;transition:color .2s}
+.mk-badge a:hover{color:#fff}
+
+@media(max-width:680px){
+  .site-nav{display:none}
+  .menu-toggle{display:flex}
+  .mobile-menu{display:flex}
+  .site-header{padding:13px 18px}
+  .brand{gap:10px}
+  .brand svg{width:22px;height:22px}
+  .b-name{font-size:15px;letter-spacing:.13em}
+  .b-tag{font-size:9.5px;letter-spacing:.26em;margin-top:4px}
+  .client-wall{gap:13px 22px}
+  .client-wall span{font-size:clamp(16px,4.6vw,21px)}
+  .svc-row .desc{display:none}
+  .statement,.services,.clients,.contact{padding-left:20px;padding-right:20px}
+  .mk-badge{left:10px;bottom:10px;font-size:9px;padding:7px 11px;gap:7px}
+}

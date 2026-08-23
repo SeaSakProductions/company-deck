@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — Mockup 4 · Systems Board</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     DIRECTION 4 — SYSTEMS BOARD
+     The eight disciplines laid out like a production plot or a
+     patch panel: orthogonal, deliberate, right-angle traces that
+     draw in and settle. Nothing drifts. A wide photo band cycles
+     event types behind it at low opacity so the range still reads.
+     ============================================================ */
+  .sb-hero{
+    position:relative;min-height:100vh;overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:12vh 28px 9vh;
+  }
+
+  /* --- cycling photo band behind the board --- */
+  .sb-band{position:absolute;left:0;right:0;top:0;bottom:0;z-index:0}
+  .sb-band .slot{position:absolute;inset:0;opacity:0;animation:bandCycle 21s ease-in-out infinite}
+  .sb-band .slot:nth-child(1){animation-delay:0s}
+  .sb-band .slot:nth-child(2){animation-delay:7s}
+  .sb-band .slot:nth-child(3){animation-delay:14s}
+  @keyframes bandCycle{0%{opacity:0}6%{opacity:.5}28%{opacity:.5}36%{opacity:0}100%{opacity:0}}
+  .sb-band::after{
+    content:"";position:absolute;inset:0;z-index:2;
+    background:
+      radial-gradient(ellipse 62% 56% at 50% 50%, rgba(5,6,8,.86), rgba(5,6,8,.48) 52%, rgba(5,6,8,.80)),
+      linear-gradient(180deg,rgba(5,6,8,.9),transparent 30%,transparent 72%,rgba(5,6,8,.93));
+  }
+  /* blueprint hatch over the whole hero */
+  .sb-hero::before{
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.4;
+    background:
+      repeating-linear-gradient(90deg, rgba(127,195,255,.055) 0 1px, transparent 1px 84px),
+      repeating-linear-gradient(0deg,  rgba(127,195,255,.055) 0 1px, transparent 1px 84px);
+    mask-image:radial-gradient(ellipse 78% 72% at 50% 50%,#000,transparent 78%);
+    -webkit-mask-image:radial-gradient(ellipse 78% 72% at 50% 50%,#000,transparent 78%);
+  }
+
+  /* --- headline --- */
+  .sb-head{position:relative;z-index:5;text-align:center;margin-bottom:clamp(22px,3.2vh,40px);
+    opacity:0;animation:sbIn 1s ease forwards .1s}
+  @keyframes sbIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .sb-head .eyebrow{
+    font-size:10.5px;letter-spacing:.42em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;font-weight:600;
+  }
+  .sb-head h1{
+    font-size:clamp(21px,3.2vw,42px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1.18;
+    background:linear-gradient(180deg,#fff,#dfe5ec 46%,#a0a9b6);
+    -webkit-background-clip:text;background-clip:text;color:transparent;padding-left:.1em;
+  }
+  .sb-head p{margin-top:16px;font-size:clamp(12.5px,1.4vw,15.5px);color:var(--muted);max-width:50ch;margin-left:auto;margin-right:auto;line-height:1.68}
+
+  /* --- the board --- */
+  .sb-board{
+    position:relative;z-index:5;width:100%;max-width:1020px;
+    display:grid;gap:clamp(10px,1.5vw,20px);
+    grid-template-columns:1fr 1fr 1fr;
+    grid-template-areas:"s1 s2 s3" "s8 mk s4" "s7 s6 s5";
+  }
+
+  /* traces: the tic-tac-toe gutter lines the board is wired on */
+  .sb-traces{position:absolute;inset:0;z-index:-1;pointer-events:none}
+  .sb-traces .h,.sb-traces .v{position:absolute;background:rgba(127,195,255,.30)}
+  .sb-traces .h{left:0;right:0;height:1px;transform:scaleX(0);transform-origin:left center;
+    animation:traceH 1.2s cubic-bezier(.3,.7,.3,1) forwards}
+  .sb-traces .v{top:0;bottom:0;width:1px;transform:scaleY(0);transform-origin:center top;
+    animation:traceV 1.2s cubic-bezier(.3,.7,.3,1) forwards}
+  @keyframes traceH{to{transform:scaleX(1)}}
+  @keyframes traceV{to{transform:scaleY(1)}}
+  .sb-traces .h1{top:33.33%;animation-delay:.35s}
+  .sb-traces .h2{top:66.67%;animation-delay:.5s}
+  .sb-traces .v1{left:33.33%;animation-delay:.65s}
+  .sb-traces .v2{left:66.67%;animation-delay:.8s}
+  .sb-traces i{
+    position:absolute;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#dff0ff;
+    box-shadow:0 0 9px 2px rgba(127,195,255,.75);opacity:0;animation:sbIn .5s ease forwards 1.15s;
+  }
+  /* a pulse that laps the center ring — the "runs as one" tell */
+  .sb-ring{
+    position:absolute;left:33.33%;top:33.33%;width:33.34%;height:33.34%;
+    z-index:-1;pointer-events:none;
+  }
+  .sb-ring i{
+    position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#fff;
+    box-shadow:0 0 12px 3px rgba(127,195,255,.9),0 0 24px 7px rgba(127,195,255,.35);
+    animation:lap 9s linear infinite 1.6s;offset-path:none;
+  }
+  @keyframes lap{
+    0%  {left:0%;   top:0%}
+    25% {left:100%; top:0%}
+    50% {left:100%; top:100%}
+    75% {left:0%;   top:100%}
+    100%{left:0%;   top:0%}
+  }
+
+  /* --- cells --- */
+  .sb-cell{
+    position:relative;padding:clamp(14px,1.9vw,22px);
+    border:1px solid rgba(255,255,255,.11);
+    background:rgba(8,10,15,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    opacity:0;animation:sbIn .7s ease forwards;
+    transition:border-color .3s,background .3s,transform .3s;
+  }
+  .sb-cell:hover{border-color:rgba(127,195,255,.5);background:rgba(12,17,26,.86);transform:translateY(-2px)}
+  /* corner ticks — drafting detail */
+  .sb-cell::before,.sb-cell::after{
+    content:"";position:absolute;width:8px;height:8px;border:1px solid rgba(127,195,255,.5);
+  }
+  .sb-cell::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .sb-cell::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+  .sb-cell .idx{font-size:9.5px;letter-spacing:.24em;color:var(--accent);font-weight:700;display:block;margin-bottom:9px}
+  .sb-cell .nm{font-size:clamp(13px,1.5vw,17px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;display:block}
+  .sb-cell .ds{margin-top:8px;font-size:clamp(10.5px,1.05vw,12.5px);color:var(--muted);line-height:1.55;display:block}
+  .sb-cell:nth-of-type(1){animation-delay:1.15s} .sb-cell:nth-of-type(2){animation-delay:1.24s}
+  .sb-cell:nth-of-type(3){animation-delay:1.33s} .sb-cell:nth-of-type(4){animation-delay:1.42s}
+  .sb-cell:nth-of-type(5){animation-delay:1.51s} .sb-cell:nth-of-type(6){animation-delay:1.60s}
+  .sb-cell:nth-of-type(7){animation-delay:1.69s} .sb-cell:nth-of-type(8){animation-delay:1.78s}
+  .c1{grid-area:s1}.c2{grid-area:s2}.c3{grid-area:s3}.c4{grid-area:s4}
+  .c5{grid-area:s5}.c6{grid-area:s6}.c7{grid-area:s7}.c8{grid-area:s8}
+
+  /* --- origin cell: the mark --- */
+  .sb-mk{
+    grid-area:mk;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    padding:clamp(12px,1.8vw,22px);opacity:0;animation:sbIn .9s ease forwards .95s;
+  }
+  .sb-mk svg{width:clamp(58px,7vw,92px);height:auto;filter:drop-shadow(0 0 20px rgba(127,195,255,.6));
+    animation:mkPulse 8s ease-in-out infinite 1.8s}
+  @keyframes mkPulse{0%,100%{filter:drop-shadow(0 0 16px rgba(127,195,255,.4))}50%{filter:drop-shadow(0 0 34px rgba(127,195,255,.72))}}
+  .sb-mk .t{margin-top:14px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#cfd6dd;font-weight:700;line-height:1.7}
+  .sb-mk .t small{display:block;color:var(--faint);letter-spacing:.2em;font-size:9px;margin-top:5px}
+
+  @media(max-width:880px){
+    .sb-hero{min-height:auto;padding:16vh 20px 10vh}
+    .sb-board{grid-template-columns:1fr 1fr;grid-template-areas:"mk mk" "s1 s2" "s3 s4" "s5 s6" "s7 s8";gap:10px}
+    .sb-traces,.sb-ring{display:none}
+    .sb-mk{padding:0 0 22px}
+    .sb-mk svg{width:64px}
+    .sb-cell{padding:14px;min-width:0}
+    .sb-cell .nm{font-size:13px;letter-spacing:.08em;overflow-wrap:anywhere}
+    .sb-cell .ds{display:none}
+    .scroll-hint{display:none}
+  }
+  @media(max-width:420px){
+    .sb-board{grid-template-columns:1fr;grid-template-areas:"mk" "s1" "s2" "s3" "s4" "s5" "s6" "s7" "s8"}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#work">Work</a><a href="#events">Events</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#work">Work</a><a href="#events">Events</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="sb-hero" id="top">
+  <div class="sb-band" aria-hidden="true">
+    <div class="slot slot--soft slot--music slot--stage"><div class="slot__ph"></div><span class="slot__cap">Festival main stage — night</span></div>
+    <div class="slot slot--soft slot--corp slot--keynote"><div class="slot__ph"></div><span class="slot__cap">Corporate general session</span></div>
+    <div class="slot slot--soft slot--corp slot--expo"><div class="slot__ph"></div><span class="slot__cap">Expo floor / brand activation</span></div>
+  </div>
+
+  <div class="sb-head">
+    <div class="eyebrow">Event Solutions</div>
+    <h1>Eight disciplines.<br>One board.</h1>
+    <p>Concerts, festivals, conferences, galas and activations — one plan, one team, no line drawn between them.</p>
+  </div>
+
+  <div class="sb-board">
+    <div class="sb-traces" aria-hidden="true">
+      <div class="h h1"></div><div class="h h2"></div><div class="v v1"></div><div class="v v2"></div>
+      <i style="left:33.33%;top:33.33%"></i><i style="left:66.67%;top:33.33%"></i>
+      <i style="left:33.33%;top:66.67%"></i><i style="left:66.67%;top:66.67%"></i>
+    </div>
+    <div class="sb-ring" aria-hidden="true"><i></i></div>
+
+    <div class="sb-cell c1"><span class="idx">01</span><span class="nm">Staging</span><span class="ds">Main stage, sub-stages, risers, roof systems</span></div>
+    <div class="sb-cell c2"><span class="idx">02</span><span class="nm">Power</span><span class="ds">Distro, generators, shore tie-in, redundancy</span></div>
+    <div class="sb-cell c3"><span class="idx">03</span><span class="nm">Trucking</span><span class="ds">Routing, load-in windows, dock and yard control</span></div>
+    <div class="sb-cell c4"><span class="idx">04</span><span class="nm">Labor</span><span class="ds">Stagehands, forklifts, steward and call management</span></div>
+    <div class="sb-cell c5"><span class="idx">05</span><span class="nm">Design</span><span class="ds">Site plans, CAD, stage plots, sightlines</span></div>
+    <div class="sb-cell c6"><span class="idx">06</span><span class="nm">Operations</span><span class="ds">Schedules, comms, vendor and venue coordination</span></div>
+    <div class="sb-cell c7"><span class="idx">07</span><span class="nm">Hospitality</span><span class="ds">Catering, green rooms, travel, credentials</span></div>
+    <div class="sb-cell c8"><span class="idx">08</span><span class="nm">Artist Advance</span><span class="ds">Riders, tech packs, day sheets, speaker prep</span></div>
+
+    <div class="sb-mk">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <g stroke="rgba(255,255,255,.6)" stroke-width="2.6" fill="none">
+          <path d="M60 8 L112 60 L60 112 L8 60 Z"/><path d="M60 8 L60 112 M8 60 L112 60"/>
+        </g>
+        <g fill="#fff"><circle cx="60" cy="8" r="7.5"/><circle cx="112" cy="60" r="7.5"/>
+        <circle cx="60" cy="112" r="7.5"/><circle cx="8" cy="60" r="7.5"/><circle cx="60" cy="60" r="9.5"/></g>
+      </svg>
+      <div class="t">SeaSak<small>Runs as one</small></div>
+    </div>
+  </div>
+
+  <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
+</section>
+
+<!-- ================= STATEMENT ================= -->
+<section class="statement">
+  <p class="reveal">Every part of your event, <span class="accent">runs as one.</span></p>
+  <p class="sub reveal">Full-scope event production — staging, power, logistics, labor, and the people who make show day work. Music festivals, conferences, brand activations, private events. The discipline doesn't change with the guest list.</p>
+</section>
+
+<!-- ================= EVENTS ================= -->
+<section class="clients" id="events" style="padding:6vh 24px 13vh">
+  <div class="clients-label reveal">Selected Events</div>
+  <div class="client-wall reveal">
+    <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
+    <span>NFL Draft</span><span>Minnesota State Fair</span><span>Innings &amp; Extra Innings</span>
+    <span>Milwaukee Metal Fest</span><span>Point Break Fest</span>
+  </div>
+</section>
+
+<!-- ================= CLIENTS ================= -->
+<section class="clients" id="clients" style="padding:0 24px 20vh">
+  <div class="clients-label reveal">Clients</div>
+  <div class="client-wall reveal">
+    <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+    <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+    <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="work">
+  <h2 class="reveal">Bring us the date.<br><span>We'll bring the show.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="mark">SEASAK PRODUCTIONS</div>
+    <div class="meta">Event Solutions</div>
+  </div>
+</footer>
+
+<div class="mk-badge">Mockup <b>4</b> · Systems Board <a href="index.html">All four →</a></div>
+
+<script src="_shared.js"></script>
+</body>
+</html>
