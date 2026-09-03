@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — 11 Plain</title>
+<style>
+  /* ============================================================
+     11 — PLAIN
+     No animation, no interface furniture, no glow. A contractor's
+     site: large photography of real builds, plain type, facts
+     stated once. Deliberately does NOT use the blue-accent tech
+     styling shared by 01-10 — that palette is a large part of why
+     those read as a product demo rather than a production company.
+     ============================================================ */
+  :root{
+    --bg:#0c0c0d;
+    --paper:#f4f2ef;
+    --text:#ece9e4;
+    --muted:#8f8b84;
+    --faint:#5f5c57;
+    --rule:rgba(236,233,228,.14);
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+  /* ---------- header ---------- */
+  header{position:absolute;top:0;left:0;right:0;z-index:20;padding:30px 0}
+  .hdr{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .brand{display:flex;flex-direction:column;gap:3px}
+  .brand .n{font-size:15px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .brand .t{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+  nav{display:flex;gap:32px;align-items:center}
+  nav a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+  nav a:hover{color:var(--text)}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;height:100svh;min-height:560px;display:flex;align-items:flex-end;overflow:hidden}
+  .hero .shot{position:absolute;inset:0}
+  .hero .shot::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(12,12,13,.72) 0%,rgba(12,12,13,.10) 38%,rgba(12,12,13,.92) 100%)}
+  .hero .inner{position:relative;z-index:5;width:100%;padding-bottom:9vh}
+  .hero h1{font-size:clamp(30px,5.1vw,62px);font-weight:600;letter-spacing:-.032em;line-height:1.04;max-width:15ch}
+  .hero p{margin-top:26px;max-width:46ch;font-size:clamp(15px,1.55vw,17.5px);color:#c4c0b9;line-height:1.68}
+  .credit{position:absolute;right:28px;bottom:9vh;z-index:5;text-align:right;
+    font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(236,233,228,.42);line-height:1.9}
+
+  /* ---------- statement ---------- */
+  .statement{padding:16vh 0 14vh}
+  .statement p{font-size:clamp(19px,2.5vw,30px);font-weight:400;letter-spacing:-.018em;line-height:1.42;max-width:24ch}
+  .statement .sub{margin-top:34px;font-size:clamp(15px,1.5vw,17px);color:var(--muted);line-height:1.78;max-width:58ch;letter-spacing:0}
+
+  /* ---------- scope ---------- */
+  .scope{padding:0 0 16vh}
+  .lab{font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--faint);
+    padding-bottom:20px;border-bottom:1px solid var(--rule);margin-bottom:6px}
+  .rows{display:grid;grid-template-columns:1fr 1fr;column-gap:70px}
+  .row{display:flex;align-items:baseline;gap:20px;padding:22px 0;border-bottom:1px solid var(--rule)}
+  .row .nm{font-size:clamp(16px,1.75vw,20px);font-weight:600;letter-spacing:-.012em;min-width:132px}
+  .row .ds{font-size:13.5px;color:var(--muted);line-height:1.6}
+
+  /* ---------- work ---------- */
+  .work{padding:0 0 6vh}
+  .job{margin-bottom:12vh}
+  .job .shot{position:relative;aspect-ratio:16/8;overflow:hidden;background:#111}
+  .job .meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 34px;padding-top:22px}
+  .job h3{font-size:clamp(19px,2.3vw,27px);font-weight:600;letter-spacing:-.018em}
+  .job .yr{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .job .sc{margin-left:auto;font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .job.wide .shot{aspect-ratio:16/6.4}
+
+  /* ---------- clients ---------- */
+  .clients{padding:4vh 0 16vh}
+  .cwall{display:flex;flex-wrap:wrap;gap:12px 46px;padding-top:30px}
+  .cwall span{font-size:15px;color:#b8b4ad;letter-spacing:.01em}
+
+  /* ---------- contact ---------- */
+  .contact{padding:16vh 0;border-top:1px solid var(--rule)}
+  .contact h2{font-size:clamp(23px,3.3vw,42px);font-weight:600;letter-spacing:-.026em;line-height:1.12;max-width:16ch}
+  .contact .m{display:inline-block;margin-top:34px;font-size:clamp(16px,1.9vw,21px);
+    padding-bottom:7px;border-bottom:1px solid var(--rule);transition:border-color .25s}
+  .contact .m:hover{border-color:var(--paper)}
+  .contact .ph{margin-top:22px;font-size:14px;color:var(--muted)}
+  footer{padding:44px 0 54px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;
+    font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);gap:16px;flex-wrap:wrap}
+
+  /* ---------- photo stand-ins ----------
+     Flat, neutral, and labelled. They are placeholders and they look
+     like placeholders — no fake lens flare pretending to be a photo. */
+  .shot{--img:none}
+  .ph{position:absolute;inset:0;background:#141414;
+    background-image:
+      repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0 2px,transparent 2px 9px);
+    display:flex;align-items:center;justify-content:center}
+  .ph b{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:rgba(236,233,228,.30);
+    font-weight:600;text-align:center;padding:0 24px;line-height:2}
+  .shot[style*="--img"] .ph{display:none}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  @media(max-width:820px){
+    nav{display:none}
+    .rows{grid-template-columns:1fr;column-gap:0}
+    .row{gap:14px;flex-direction:column}
+    .row .nm{min-width:0}
+    .credit{display:none}
+    .job .sc{margin-left:0;width:100%}
+    .statement{padding:12vh 0 10vh}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr">
+    <a class="brand" href="#top">
+      <span class="n">SeaSak Productions</span>
+      <span class="t">Event Solutions</span>
+    </a>
+    <nav>
+      <a href="#scope">Scope</a><a href="#work">Work</a><a href="#clients">Clients</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="shot"><div class="ph"><b>Hero — festival main stage at night<br>wide, from the crowd</b></div></div>
+  <div class="wrap inner">
+    <h1>Staging, power, trucking and crew.</h1>
+    <p>Full-scope production for festivals, fairs and national broadcast events — hired by the promoters and production companies who run them.</p>
+  </div>
+  <div class="credit">BottleRock Napa Valley<br>Staging · Power · Labor</div>
+</section>
+
+<!-- ================= STATEMENT ================= -->
+<section class="statement">
+  <div class="wrap">
+    <p class="reveal">We take a defined scope and hand it back finished.</p>
+    <p class="sub reveal">Most of our work comes from people who already do this for a living. A promoter or production company gives us staging, or power, or the whole build, and we deliver it to the schedule they're working to — with one person accountable for it rather than four vendors pointing at each other.</p>
+  </div>
+</section>
+
+<!-- ================= SCOPE ================= -->
+<section class="scope" id="scope">
+  <div class="wrap">
+    <div class="lab reveal">Scope</div>
+    <div class="rows reveal">
+      <div class="row"><span class="nm">Staging</span><span class="ds">Main stage, sub-stages, risers, roof systems</span></div>
+      <div class="row"><span class="nm">Power</span><span class="ds">Generators, distro, shore tie-in, redundancy</span></div>
+      <div class="row"><span class="nm">Trucking</span><span class="ds">Routing, yard control, dock and load-in windows</span></div>
+      <div class="row"><span class="nm">Labor</span><span class="ds">Stagehands, forklift operators, stewards, call management</span></div>
+      <div class="row"><span class="nm">Design</span><span class="ds">Site plans, CAD, stage plots, sightlines</span></div>
+      <div class="row"><span class="nm">Operations</span><span class="ds">Schedules, comms, vendor and venue coordination</span></div>
+      <div class="row"><span class="nm">Hospitality</span><span class="ds">Catering, green rooms, travel, credentials</span></div>
+      <div class="row"><span class="nm">Artist Advance</span><span class="ds">Riders, tech packs, day sheets, speaker prep</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section class="work" id="work">
+  <div class="wrap">
+    <div class="lab reveal" style="margin-bottom:56px">Selected Work</div>
+
+    <div class="job reveal">
+      <div class="shot"><div class="ph"><b>Main stage build — wide, daylight or dusk</b></div></div>
+      <div class="meta">
+        <h3>BottleRock Napa Valley</h3><span class="yr">Napa, CA</span>
+        <span class="sc">Staging · Power · Labor</span>
+      </div>
+    </div>
+
+    <div class="job wide reveal">
+      <div class="shot"><div class="ph"><b>Broadcast build — structure and camera positions</b></div></div>
+      <div class="meta">
+        <h3>NFL Draft</h3><span class="yr">National broadcast</span>
+        <span class="sc">Staging · Design · Operations</span>
+      </div>
+    </div>
+
+    <div class="job reveal">
+      <div class="shot"><div class="ph"><b>Load-in at dawn — trucks, dock, forklifts</b></div></div>
+      <div class="meta">
+        <h3>Minnesota State Fair</h3><span class="yr">Falcon Heights, MN</span>
+        <span class="sc">Power · Trucking · Labor</span>
+      </div>
+    </div>
+
+    <div class="job reveal">
+      <div class="shot"><div class="ph"><b>Crowd from the deck at showtime</b></div></div>
+      <div class="meta">
+        <h3>Lollapalooza</h3><span class="yr">Chicago, IL</span>
+        <span class="sc">Staging · Trucking · Crew</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLIENTS ================= -->
+<section class="clients" id="clients">
+  <div class="wrap">
+    <div class="lab reveal">Hired By</div>
+    <div class="cwall reveal">
+      <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+      <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+      <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2 class="reveal">Tell us the date and the scope.</h2>
+    <a class="m reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+    <p class="ph reveal" style="position:static;background:none;display:block;color:var(--muted);font-size:14px;margin-top:22px">
+      Availability and budgetary numbers same week.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;gap:16px;flex-wrap:wrap">
+    <span>SeaSak Productions</span><span>Event Solutions</span>
+  </div>
+</footer>
+
+<div style="position:fixed;left:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:10px;
+  padding:9px 14px;border:1px solid var(--rule);background:rgba(12,12,13,.86);backdrop-filter:blur(8px);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)">
+  Mockup <b style="color:var(--paper)">11</b> · Plain
+  <a href="index.html" style="color:var(--faint);border-left:1px solid var(--rule);padding-left:10px">All directions →</a>
+</div>
+
+<script>
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

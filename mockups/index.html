@@ -115,6 +115,15 @@
   .ch-sep::before,.ch-sep::after{content:"";flex:1;height:1px;background:var(--line)}
   @media(max-width:860px){ .ch-feature{grid-template-columns:1fr} .ch-feature .ch-thumb{aspect-ratio:16/9;border-right:none;border-bottom:1px solid var(--line)} }
 
+  /* 11 plain — photo block, type, rules; no accent colour */
+  .th11{background:#0c0c0d}
+  .th11 .im{position:absolute;left:0;right:0;top:0;height:58%;background:#141414;
+    background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 2px,transparent 2px 9px)}
+  .th11 .h{position:absolute;left:7%;top:64%;width:44%;height:9px;background:rgba(244,242,239,.88)}
+  .th11 .h2{position:absolute;left:7%;top:75%;width:31%;height:9px;background:rgba(244,242,239,.6)}
+  .th11 .p{position:absolute;left:7%;top:88%;width:26%;height:3px;background:rgba(244,242,239,.2)}
+  .th11 .r{position:absolute;left:7%;right:7%;top:61%;height:1px;background:rgba(244,242,239,.14)}
+
   .ch-body{padding:24px 26px 28px}
   .ch-body h2{font-size:clamp(17px,2vw,23px);font-weight:700;letter-spacing:-.012em}
   .ch-body h2 em{font-style:normal;color:var(--accent);font-weight:700;margin-right:10px}
@@ -176,18 +185,16 @@
     </div>
   </div>
 
-  <a class="ch-feature" href="10-blueprint.html">
-    <div class="ch-thumb"><div class="th th10">
-      <div class="gd"></div><div class="bd"></div><div class="cz"></div><div class="st"></div><div class="rt"></div>
-      <div class="ph"></div><div class="wipe"></div>
-      <div class="pn"><b></b><b></b><b></b><b></b><b></b></div>
-    </div><span class="n">10</span></div>
+  <a class="ch-feature" href="11-plain.html">
+    <div class="ch-thumb"><div class="th th11">
+      <div class="im"></div><div class="r"></div><div class="h"></div><div class="h2"></div><div class="p"></div>
+    </div><span class="n">11</span></div>
     <div class="ch-body">
       <span class="ch-flag">Current direction</span>
-      <h2><em>10</em>Blueprint</h2>
-      <p class="say">One sheet carries the whole page, built up across five phases — survey, infrastructure, structures, circulation, operations. Scope is shown by <b style="color:#c3cad4;font-weight:600">accumulation rather than a list</b>: the drawing ends up carrying eighty-odd elements across forty-three named layers, with a live element count in the layer manager.</p>
-      <p class="note">The last step wipes the sheet onto the built event: the photograph comes up <b style="color:#c3cad4;font-weight:600">behind</b> the linework, so the finished plan stays registered over the real site. Paper, then built — which is the argument the whole page is making.</p>
-      <div class="ch-meta"><span class="hot">1 photo</span><span>43 layers · 5 phases</span><span>Extends 09</span></div>
+      <h2><em>11</em>Plain</h2>
+      <p class="say">No animation, no interface furniture, no glow — and deliberately <b style="color:#c3cad4;font-weight:600">not the blue tech palette</b> shared by 01–10, which is a large part of why those read as a product demo rather than a production company. Large photography, plain type, facts stated once.</p>
+      <p class="note">It looks bare right now, and that is the honest state: <b style="color:#c3cad4;font-weight:600">the photographs are the design</b>. The placeholders are flat labelled panels rather than fake scenes, so what is missing is obvious instead of disguised.</p>
+      <div class="ch-meta"><span class="hot">5 photos</span><span>No animation</span><span class="warn">Blocked on photography</span></div>
       <div class="ch-open">Open direction →</div>
     </div>
   </a>
@@ -252,10 +259,24 @@
         <div class="ch-open">Open direction →</div>
       </div>
     </a>
+    <a class="ch-card" href="10-blueprint.html">
+      <div class="ch-thumb"><div class="th th10">
+        <div class="gd"></div><div class="bd"></div><div class="cz"></div><div class="st"></div><div class="rt"></div>
+        <div class="ph"></div><div class="wipe"></div>
+        <div class="pn"><b></b><b></b><b></b><b></b><b></b></div>
+      </div><span class="n">10</span></div>
+      <div class="ch-body">
+        <h2><em>10</em>Blueprint</h2>
+        <p class="say">The site plan taken as far as it goes: five phases accumulating onto one sheet, a scrolling layer manager, a live element count, and a wipe from the drawing to the built site.</p>
+        <p class="note">Kept for the record. The interface furniture is what tipped it into looking like a toy — worth seeing next to 11 to judge how much of that was the drawing and how much was the HUD around it.</p>
+        <div class="ch-meta"><span class="hot">1 photo</span><span>Most elaborate</span><span class="warn">Reads as a toy</span></div>
+        <div class="ch-open">Open direction →</div>
+      </div>
+    </a>
   </div>
 
   <div class="ch-foot">
-    <p><b>Recommendation.</b> <b>10 Blueprint</b>. It keeps the drawing style from 09 but drops the tidy list of services: scope reads as density on a real sheet, which is closer to what the work actually is. It needs a single photograph, so nothing blocks it. <b>06 The Roster</b> remains the one to build once five strong frames exist.</p>
+    <p><b>Recommendation.</b> <b>11 Plain</b>. Directions 06–10 got steadily more elaborate — the blueprint ended up with a layer manager, an element counter and a scroll-driven build sequence, which reads as a toy rather than a drawing. All of that was an increasingly clever way of working around the fact that there are no photographs. The fix is restraint plus real frames, not more animation.</p>
     <p style="margin-top:16px"><b>Still no photos in the project.</b> Every image is a labeled CSS stand-in cropped exactly where the real shot goes — dropping one in is one line: <code>--img:url('photos/mainstage.jpg')</code>. Priority shots are unchanged: a festival main stage at night, a load-in dawn dock, and a wide of NFL Draft or the State Fair to carry the scale argument.</p>
     <p style="margin-top:16px"><b>Nothing here is live.</b> These are working files under <code>mockups/</code>; deck.seasakproductions.com is untouched until you pick one. Earlier rounds are kept in the <a href="archive.html">archive</a>.</p>
   </div>
