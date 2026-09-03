@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — 08 Show Day</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     08 — SHOW DAY
+     A promoter isn't buying gear, they're buying judgement. So the
+     page walks one show from advance to load-out and attaches the
+     departments at the moment they actually matter. Photography
+     carries each chapter full-bleed; a fixed rail keeps you
+     oriented in the day.
+     ============================================================ */
+  :root{ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+  /* --- opening --- */
+  .sd-open{min-height:96vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:16vh 24px 10vh;position:relative;overflow:hidden}
+  .sd-open .bk{position:absolute;inset:0;opacity:.34}
+  .sd-open .bk::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 45%,transparent,rgba(5,6,8,.94) 78%),
+               linear-gradient(180deg,rgba(5,6,8,.7),rgba(5,6,8,.35) 40%,rgba(5,6,8,.98))}
+  .sd-open .in{position:relative;z-index:4;max-width:960px}
+  .sd-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);
+    font-weight:600;margin-bottom:28px}
+  .sd-h1{font-size:clamp(30px,5.8vw,66px);font-weight:700;letter-spacing:-.03em;line-height:1.07;
+    background:linear-gradient(180deg,#fff,#a3accb);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sd-sub{margin:26px auto 0;max-width:56ch;font-size:clamp(14px,1.6vw,17px);color:#a8b0bc;line-height:1.75}
+
+  /* --- fixed rail --- */
+  .sd-rail{position:fixed;left:34px;top:50%;transform:translateY(-50%);z-index:40;
+    display:flex;flex-direction:column;gap:0;opacity:0;transition:opacity .5s}
+  .sd-rail.show{opacity:1}
+  .sd-rail a{display:flex;align-items:center;gap:12px;padding:9px 0;text-decoration:none;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;transition:color .3s}
+  .sd-rail a .pip{width:7px;height:7px;border:1px solid rgba(255,255,255,.3);transform:rotate(45deg);
+    flex:none;transition:background .3s,border-color .3s,box-shadow .3s}
+  .sd-rail a.on{color:#fff}
+  .sd-rail a.on .pip{background:var(--accent);border-color:var(--accent);box-shadow:0 0 12px 2px rgba(127,195,255,.6)}
+  .sd-rail a:hover{color:#cdd5df}
+
+  /* --- chapters --- */
+  .sd-ch{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;
+    border-top:1px solid rgba(255,255,255,.06)}
+  .sd-ch .bg{position:absolute;inset:0;transition:transform 1.2s ease}
+  .sd-ch .bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,rgba(5,6,8,.95) 30%,rgba(5,6,8,.55) 62%,rgba(5,6,8,.8)),
+               linear-gradient(180deg,rgba(5,6,8,.7),transparent 35%,rgba(5,6,8,.8))}
+  .sd-ch .in{position:relative;z-index:5;max-width:var(--maxw);margin:0 auto;padding:0 24px 0 96px;width:100%}
+  .sd-clock{font-family:var(--mono);font-size:clamp(38px,7vw,86px);font-weight:700;letter-spacing:-.04em;line-height:1;
+    color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.38)}
+  .sd-ttl{margin-top:20px;font-size:clamp(22px,3.4vw,40px);font-weight:700;letter-spacing:-.022em}
+  .sd-txt{margin-top:20px;max-width:48ch;font-size:clamp(14px,1.55vw,16.5px);color:#a8b0bc;line-height:1.78}
+  .sd-deps{margin-top:34px;display:flex;flex-wrap:wrap;gap:8px;max-width:44ch}
+  .sd-deps span{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+    color:#dbe2ea;padding:8px 13px;border:1px solid rgba(255,255,255,.16);background:rgba(6,9,13,.55);backdrop-filter:blur(4px)}
+  .sd-deps span.k{color:var(--accent);border-color:rgba(127,195,255,.45)}
+  .sd-loc{margin-top:30px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+
+  /* reveal on enter */
+  .sd-ch .in > *{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .sd-ch.in-view .in > *{opacity:1;transform:none}
+  .sd-ch.in-view .sd-ttl{transition-delay:.10s}
+  .sd-ch.in-view .sd-txt{transition-delay:.18s}
+  .sd-ch.in-view .sd-deps{transition-delay:.26s}
+  .sd-ch.in-view .sd-loc{transition-delay:.34s}
+  .sd-ch.in-view .bg{transform:scale(1.05)}
+
+  @media(max-width:900px){
+    .sd-rail{display:none}
+    .sd-ch{min-height:88svh}
+    .sd-ch .in{padding:0 20px}
+    .sd-ch .bg::after{background:linear-gradient(180deg,rgba(5,6,8,.82),rgba(5,6,8,.55) 40%,rgba(5,6,8,.94))}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#advance">Show Day</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#advance">Show Day</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<nav class="sd-rail" id="sdRail" aria-label="Show day">
+  <a href="#advance"><span class="pip"></span>Advance</a>
+  <a href="#loadin"><span class="pip"></span>Load-In</a>
+  <a href="#build"><span class="pip"></span>Build</a>
+  <a href="#doors"><span class="pip"></span>Doors</a>
+  <a href="#out"><span class="pip"></span>Load-Out</a>
+</nav>
+
+<!-- ================= OPENING ================= -->
+<section class="sd-open" id="top">
+  <div class="bk slot slot--soft slot--music slot--stage" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="in">
+    <div class="sd-eyebrow">Event Solutions</div>
+    <h1 class="sd-h1">Anyone can send trucks.<br>The job is knowing when.</h1>
+    <p class="sd-sub">Staging, power, trucking and crew for festivals, fairs and national broadcast events. Here's a show day, start to finish, and where we sit in it.</p>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
+</section>
+
+<!-- ================= CHAPTERS ================= -->
+<section class="sd-ch" id="advance">
+  <div class="bg slot slot--soft slot--corp slot--expo" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="in">
+    <div class="sd-clock">T–90</div>
+    <h2 class="sd-ttl">The show is won in the advance.</h2>
+    <p class="sd-txt">Site plans, sightlines and a load-in sequence that survives contact with a real dock. Riders read, tech packs reconciled, every truck given a slot before one is booked. By the time steel arrives, the arguments are already over.</p>
+    <div class="sd-deps"><span class="k">Design</span><span class="k">Operations</span><span>Artist Advance</span></div>
+    <div class="sd-loc">Days out · CAD, site plan, run of show</div>
+  </div>
+</section>
+
+<section class="sd-ch" id="loadin">
+  <div class="bg slot slot--soft slot--music slot--truck" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="in">
+    <div class="sd-clock">05:00</div>
+    <h2 class="sd-ttl">Trucks hit the yard in the dark.</h2>
+    <p class="sd-txt">Routing, marshalling and dock control — so trailers land in the order the build needs them, not the order they showed up. The yard is the first place a schedule goes wrong, and the cheapest place to fix it.</p>
+    <div class="sd-deps"><span class="k">Trucking</span><span class="k">Labor</span><span>Operations</span></div>
+    <div class="sd-loc">Load-in day · yard control, marshalling</div>
+  </div>
+</section>
+
+<section class="sd-ch" id="build">
+  <div class="bg slot slot--soft slot--music slot--stage" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="in">
+    <div class="sd-clock">11:00</div>
+    <h2 class="sd-ttl">Steel up, power on.</h2>
+    <p class="sd-txt">Main stage, sub-stages, risers and roof. Generators, distro and a tie-in with enough redundancy that nothing on the bill ever learns there was a problem. Crew calls sized to the build, stewarded, and pushed to the schedule.</p>
+    <div class="sd-deps"><span class="k">Staging</span><span class="k">Power</span><span>Labor</span></div>
+    <div class="sd-loc">Build · steel, roof, distro</div>
+  </div>
+</section>
+
+<section class="sd-ch" id="doors">
+  <div class="bg slot slot--soft slot--music slot--crowd" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="in">
+    <div class="sd-clock">18:00</div>
+    <h2 class="sd-ttl">Doors. Now none of it can move.</h2>
+    <p class="sd-txt">Green rooms stocked, credentials issued, travel landed, changeovers rehearsed. From here the day runs on comms and the plan holding — twenty-minute turns, no second attempt, and a public who should never know how close anything ran.</p>
+    <div class="sd-deps"><span class="k">Hospitality</span><span class="k">Operations</span><span>Artist Advance</span></div>
+    <div class="sd-loc">Show · comms, changeovers, hospitality</div>
+  </div>
+</section>
+
+<section class="sd-ch" id="out">
+  <div class="bg slot slot--soft slot--corp slot--keynote" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="in">
+    <div class="sd-clock">02:00</div>
+    <h2 class="sd-ttl">Gone before the site wakes up.</h2>
+    <p class="sd-txt">Stage down under work light, trucks loaded in reverse of the plan that put them there, ground handed back the way we found it. Load-out is the part clients remember when they're deciding who to call next year.</p>
+    <div class="sd-deps"><span class="k">Labor</span><span class="k">Trucking</span><span>Staging</span></div>
+    <div class="sd-loc">Load-out · strike, reload, handback</div>
+  </div>
+</section>
+
+<!-- ================= CLIENTS ================= -->
+<section class="clients" id="clients" style="padding:14vh 24px 8vh;border-top:1px solid var(--line)">
+  <div class="clients-label reveal">Hired By</div>
+  <div class="client-wall reveal">
+    <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+    <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+    <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+  </div>
+</section>
+<section class="clients" style="padding:0 24px 18vh">
+  <div class="clients-label reveal">Selected Events</div>
+  <div class="client-wall reveal">
+    <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
+    <span>NFL Draft</span><span>Minnesota State Fair</span><span>Innings &amp; Extra Innings</span>
+    <span>Milwaukee Metal Fest</span><span>Point Break Fest</span>
+  </div>
+</section>
+
+<section class="contact">
+  <h2 class="reveal">Bring us the date.<br><span>We'll bring the show.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer><div class="wrap foot">
+  <div class="mark">SEASAK PRODUCTIONS</div><div class="meta">Event Solutions</div>
+</div></footer>
+
+<div class="mk-badge">Mockup <b>8</b> · Show Day <a href="index.html">All directions →</a></div>
+
+<script src="_shared.js"></script>
+<script>
+(function(){
+  const chs=[...document.querySelectorAll('.sd-ch')];
+  const rail=document.getElementById('sdRail');
+  const links=[...rail.querySelectorAll('a')];
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in-view');
+        const i=chs.indexOf(e.target);
+        links.forEach((l,k)=>l.classList.toggle('on',k===i));
+      }
+    });
+  },{threshold:.45});
+  chs.forEach(c=>io.observe(c));
+
+  // rail only appears once the opening is behind you
+  const first=chs[0];
+  new IntersectionObserver(es=>{
+    rail.classList.toggle('show', es[0].boundingClientRect.top < window.innerHeight*.8);
+  },{threshold:[0,.1,1]}).observe(first);
+})();
+</script>
+</body>
+</html>

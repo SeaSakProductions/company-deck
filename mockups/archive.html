@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — Directions Archive</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  .ch-wrap{max-width:1160px;margin:0 auto;padding:16vh 28px 12vh}
+  .ch-head{text-align:center;margin-bottom:64px}
+  .ch-head .eyebrow{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;font-weight:600}
+  .ch-head h1{font-size:clamp(26px,4.4vw,48px);font-weight:700;letter-spacing:-.02em;line-height:1.1;
+    background:linear-gradient(180deg,#fff,#9aa3b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ch-head p{margin:22px auto 0;max-width:62ch;color:var(--muted);font-size:clamp(14px,1.5vw,16.5px);line-height:1.75}
+  .ch-head .cur{display:inline-block;margin-top:26px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);border-bottom:1px solid var(--line);padding-bottom:5px;transition:color .2s,border-color .2s}
+  .ch-head .cur:hover{color:#fff;border-color:var(--accent)}
+
+  .ch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  .ch-card{
+    display:block;border:1px solid var(--line);background:rgba(9,11,16,.6);
+    transition:border-color .3s,transform .3s,background .3s;
+  }
+  .ch-card:hover{border-color:rgba(127,195,255,.45);transform:translateY(-3px);background:rgba(12,17,26,.8)}
+
+  /* --- tiny wireframe previews --- */
+  .ch-thumb{position:relative;aspect-ratio:16/9;background:#070a0e;border-bottom:1px solid var(--line);overflow:hidden}
+  .ch-thumb .n{position:absolute;top:12px;left:14px;font-size:10px;letter-spacing:.24em;color:var(--faint);font-weight:700;z-index:5}
+  .th{position:absolute;inset:0}
+  /* 1 two worlds */
+  .th1 .a{position:absolute;inset:0;background:linear-gradient(90deg,
+    rgba(255,154,77,.32),rgba(255,154,77,.13) 30%,rgba(160,180,210,.10) 50%,
+    rgba(127,195,255,.13) 70%,rgba(127,195,255,.30))}
+  .th1 .b{display:none}
+  .th1 .s{position:absolute;left:50%;top:14%;bottom:14%;width:30%;transform:translateX(-50%);
+    background:linear-gradient(90deg,transparent,rgba(220,235,255,.16),transparent);filter:blur(7px)}
+  .th1 .d{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;transform:rotate(45deg);
+    border:1.5px solid #fff;box-shadow:0 0 14px rgba(127,195,255,.8)}
+  .th1 .w{position:absolute;top:50%;height:1px;background:rgba(255,255,255,.45)}
+  .th1 .w.l{left:14%;width:28%}.th1 .w.r{right:14%;width:28%}
+  /* 2 work wall */
+  .th2 i{position:absolute;background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.08)}
+  .th2 i:nth-child(1){left:2%;top:4%;width:26%;height:52%}
+  .th2 i:nth-child(2){left:2%;top:58%;width:26%;height:38%}
+  .th2 i:nth-child(3){left:30%;top:4%;width:32%;height:26%;background:linear-gradient(140deg,rgba(255,154,77,.26),rgba(255,154,77,.05))}
+  .th2 i:nth-child(4){left:64%;top:4%;width:16%;height:26%}
+  .th2 i:nth-child(5){left:82%;top:4%;width:16%;height:60%;background:linear-gradient(140deg,rgba(127,195,255,.26),rgba(127,195,255,.05))}
+  .th2 i:nth-child(6){left:82%;top:66%;width:16%;height:30%}
+  .th2 i:nth-child(7){left:30%;top:74%;width:50%;height:22%}
+  .th2 .p{position:absolute;left:31%;top:32%;width:48%;height:40%;background:rgba(6,8,12,.9);border:1px solid rgba(255,255,255,.2)}
+  /* 3 through-line */
+  .th3 .r{position:absolute;left:14%;right:14%;top:56%;height:1px;background:rgba(255,255,255,.45)}
+  .th3 i{position:absolute;top:26%;width:16%;height:24%;background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.1)}
+  .th3 i:nth-of-type(1){left:6%}.th3 i:nth-of-type(2){left:29%;background:linear-gradient(140deg,rgba(127,195,255,.28),rgba(127,195,255,.05))}
+  .th3 i:nth-of-type(3){left:52%}.th3 i:nth-of-type(4){left:75%;background:linear-gradient(140deg,rgba(255,154,77,.26),rgba(255,154,77,.05))}
+  .th3 b{position:absolute;top:56%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(127,195,255,.9)}
+  .th3 b:nth-of-type(1){left:14%}.th3 b:nth-of-type(2){left:37%}.th3 b:nth-of-type(3){left:86%}
+  .th3 .d{position:absolute;left:60%;top:56%;width:20px;height:20px;margin:-10px 0 0 -10px;transform:rotate(45deg);
+    border:1.5px solid #fff;box-shadow:0 0 12px rgba(127,195,255,.85);background:#070a0e}
+  .th3 .lb{position:absolute;left:14%;right:14%;top:72%;height:1px;background:rgba(255,255,255,.10)}
+  /* 4 systems board */
+  .th4{padding:12%}
+  .th4 .g{position:absolute;inset:12%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:5px}
+  .th4 .g div{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.045)}
+  .th4 .g div.mk{border-color:rgba(127,195,255,.6);background:rgba(127,195,255,.10)}
+  .th4 .h,.th4 .v{position:absolute;background:rgba(127,195,255,.4)}
+  .th4 .h{left:12%;right:12%;height:1px}
+  .th4 .v{top:12%;bottom:12%;width:1px}
+  .th4 .h1{top:37.3%}.th4 .h2{top:62.7%}.th4 .v1{left:37.3%}.th4 .v2{left:62.7%}
+  .th4 .d{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;transform:rotate(45deg);
+    border:1.5px solid #fff;box-shadow:0 0 12px rgba(127,195,255,.85)}
+
+  /* 5 two tracks — hard split */
+  .th5 .hl{position:absolute;left:0;top:0;bottom:0;width:50%;
+    background:linear-gradient(90deg,rgba(255,154,77,.30),rgba(255,154,77,.10))}
+  .th5 .hr{position:absolute;right:0;top:0;bottom:0;width:50%;
+    background:linear-gradient(270deg,rgba(127,195,255,.30),rgba(127,195,255,.10))}
+  .th5 .sm{position:absolute;left:50%;top:8%;bottom:8%;width:1px;transform:translateX(-.5px);
+    background:linear-gradient(180deg,transparent,rgba(255,255,255,.75) 14%,rgba(255,255,255,.75) 86%,transparent)}
+  .th5 .d{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;transform:rotate(45deg);
+    border:1.5px solid #fff;background:#070a0e;box-shadow:0 0 14px rgba(255,255,255,.5)}
+  .th5 u{position:absolute;height:1px;background:rgba(255,255,255,.42);text-decoration:none}
+  .th5 u:nth-of-type(1){left:10%;width:22%;top:34%}
+  .th5 u:nth-of-type(2){left:10%;width:22%;top:50%}
+  .th5 u:nth-of-type(3){left:10%;width:22%;top:66%}
+  .th5 u:nth-of-type(4){right:10%;width:22%;top:34%}
+  .th5 u:nth-of-type(5){right:10%;width:22%;top:50%}
+  .th5 u:nth-of-type(6){right:10%;width:22%;top:66%}
+
+  /* featured (current direction) card */
+  .ch-feature{display:grid;grid-template-columns:1.15fr 1fr;margin-bottom:26px;
+    border:1px solid rgba(127,195,255,.42);background:rgba(10,15,23,.7);
+    transition:border-color .3s,transform .3s}
+  .ch-feature:hover{border-color:rgba(127,195,255,.75);transform:translateY(-3px)}
+  .ch-feature .ch-thumb{aspect-ratio:auto;border-bottom:none;border-right:1px solid var(--line)}
+  .ch-feature .ch-body{display:flex;flex-direction:column;justify-content:center}
+  .ch-flag{display:inline-block;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;
+    color:#050608;background:var(--accent);padding:5px 11px;border-radius:999px;margin-bottom:16px;align-self:flex-start}
+  .ch-sep{display:flex;align-items:center;gap:16px;margin:44px 0 26px;color:var(--faint);
+    font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:600}
+  .ch-sep::before,.ch-sep::after{content:"";flex:1;height:1px;background:var(--line)}
+  @media(max-width:820px){ .ch-feature{grid-template-columns:1fr} .ch-feature .ch-thumb{aspect-ratio:16/9;border-right:none;border-bottom:1px solid var(--line)} }
+
+  .ch-body{padding:24px 26px 26px}
+  .ch-body h2{font-size:clamp(17px,2vw,23px);font-weight:700;letter-spacing:-.01em}
+  .ch-body h2 em{font-style:normal;color:var(--accent);font-weight:700;margin-right:10px}
+  .ch-body .say{margin-top:12px;font-size:14px;color:#c3cad4;line-height:1.65}
+  .ch-body .note{margin-top:14px;font-size:13px;color:var(--muted);line-height:1.6}
+  .ch-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .ch-meta span{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#cfd6dd;
+    padding:6px 11px;border:1px solid rgba(255,255,255,.14);border-radius:999px}
+  .ch-meta span.hot{color:var(--accent);border-color:rgba(127,195,255,.4)}
+  .ch-open{margin-top:20px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600}
+
+  .ch-foot{margin-top:64px;padding-top:34px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;line-height:1.75}
+  .ch-foot b{color:#e2e8f0;font-weight:600}
+  .ch-foot code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--accent);
+    background:rgba(127,195,255,.08);padding:2px 6px;border-radius:4px}
+
+  @media(max-width:820px){
+    .ch-wrap{padding:14vh 20px 10vh}
+    .ch-grid{grid-template-columns:1fr;gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Directions Archive</span></span>
+  </a>
+  <nav class="site-nav"><a href="index.html">Current Directions</a><a href="../index.html">Live Site</a></nav>
+</header>
+
+<div class="ch-wrap">
+  <div class="ch-head">
+    <div class="eyebrow">Archive · Rounds 1–2</div>
+    <h1>Earlier directions</h1>
+    <p>Superseded. These were built to two earlier briefs — first "interleave the markets, no hard line" (01–04), then "split them down the middle" (05). Both framed the page around <b style="color:#e2e8f0;font-weight:600">music vs. corporate</b>, which turned out to be the wrong axis: the roster is overwhelmingly large-scale live work, and the people visiting are promoters and production companies, not end clients. Kept for reference.</p>
+    <a class="cur" href="index.html">← Back to the current directions</a>
+  </div>
+
+  <a class="ch-feature" href="05-two-tracks.html">
+    <div class="ch-thumb"><div class="th th5">
+      <div class="hl"></div><div class="hr"></div><div class="sm"></div>
+      <u></u><u></u><u></u><u></u><u></u><u></u><div class="d"></div>
+    </div><span class="n">05</span></div>
+    <div class="ch-body">
+      <span class="ch-flag" style="background:#3a4250;color:#aab3c0">Round 2 · superseded</span>
+      <h2><em>05</em>Two Tracks</h2>
+      <p class="say">A true 50/50 split with a drawn seam &mdash; <b style="color:#f4c9a3;font-weight:600">Live</b> on one side, <b style="color:#b9d6f2;font-weight:600">Corporate</b> on the other, each in its own vocabulary. The mark straddles the seam and is the only thing allowed to touch both worlds.</p>
+      <p class="note">Below the fold it pays the idea off: a <b style="color:#e2e8f0;font-weight:600">&quot;same discipline, different room&quot;</b> table runs Advance, Load-In, Power, Labor, Show Call and Load-Out through both worlds side by side &mdash; and the Events/Clients rosters split into two columns.</p>
+      <div class="ch-meta"><span class="hot">2 photos</span><span>Markets separated</span><span>Needs corporate proof</span></div>
+      <div class="ch-open">Open direction &rarr;</div>
+    </div>
+  </a>
+
+  <div class="ch-sep">Earlier brief &mdash; markets interleaved</div>
+
+  <div class="ch-grid">
+
+    <a class="ch-card" href="01-two-worlds.html">
+      <div class="ch-thumb"><div class="th th1">
+        <div class="a"></div><div class="b"></div><div class="s"></div>
+        <div class="w l"></div><div class="w r"></div><div class="d"></div>
+      </div><span class="n">01</span></div>
+      <div class="ch-body">
+        <h2><em>01</em>Crossfade</h2>
+        <p class="say">One continuous hero that warms toward festival at one edge and cools toward corporate at the other, overlapping through the middle. The diamond sits in the blend with the service wires running both ways.</p>
+        <p class="note">Both markets are named, neither is walled off — it reads as one image that changes temperature rather than two halves stapled together.</p>
+        <div class="ch-meta"><span class="hot">2 photos</span><span>Strongest range signal</span><span>Boldest look</span></div>
+        <div class="ch-open">Open direction →</div>
+      </div>
+    </a>
+
+    <a class="ch-card" href="02-work-wall.html">
+      <div class="ch-thumb"><div class="th th2">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><div class="p"></div>
+      </div><span class="n">02</span></div>
+      <div class="ch-body">
+        <h2><em>02</em>The Work Wall</h2>
+        <p class="say">The hero is the work: an asymmetric mosaic of stills — main stage next to gala, keynote next to crew call — interleaved so no corner of the wall belongs to one market.</p>
+        <p class="note">Portfolio-first and the most familiar read for a production company. It lives or dies on the photography, so it needs six to eight genuinely good frames.</p>
+        <div class="ch-meta"><span class="hot">7 photos</span><span>Most photo-dependent</span><span>Most conventional</span></div>
+        <div class="ch-open">Open direction →</div>
+      </div>
+    </a>
+
+    <a class="ch-card" href="03-through-line.html">
+      <div class="ch-thumb"><div class="th th3">
+        <div class="r"></div><i></i><i></i><i></i><i></i>
+        <b></b><b></b><div class="d"></div><b></b><div class="lb"></div>
+      </div><span class="n">03</span></div>
+      <div class="ch-body">
+        <h2><em>03</em>The Through-Line</h2>
+        <p class="say">One horizontal spine — Advance, Load-In, Show, Load-Out — with the diamond anchoring show day. Each station's photo cross-fades through a different venue: amphitheater, ballroom, expo hall, fairground.</p>
+        <p class="note">The closest fit to "connecting all the dots from every aspect of planning": it shows the process, and proves the range by running the same line through both kinds of event.</p>
+        <div class="ch-meta"><span class="hot">8 small photos</span><span>Best concept fit</span><span>Forgiving crops</span></div>
+        <div class="ch-open">Open direction →</div>
+      </div>
+    </a>
+
+    <a class="ch-card" href="04-systems-board.html">
+      <div class="ch-thumb"><div class="th th4">
+        <div class="g"><div></div><div></div><div></div><div></div><div class="mk"></div><div></div><div></div><div></div><div></div></div>
+        <div class="h h1"></div><div class="h h2"></div><div class="v v1"></div><div class="v v2"></div><div class="d"></div>
+      </div><span class="n">04</span></div>
+      <div class="ch-body">
+        <h2><em>04</em>Systems Board</h2>
+        <p class="say">The eight disciplines laid out like a production plot or patch panel — orthogonal, deliberate traces that draw in and settle, over a photo band that slowly cycles event types.</p>
+        <p class="note">Leans into the "Solutions" half of the name: infrastructure and control. Reads the most corporate-credible while still looking like show world, and needs the fewest photos.</p>
+        <div class="ch-meta"><span class="hot">3 photos</span><span>Lowest photo need</span><span>Most corporate</span></div>
+        <div class="ch-open">Open direction →</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="ch-foot">
+    <p><b>About the images.</b> There are no photos in the project yet, so every image slot renders as a duotone placeholder with its intended subject printed on it, cropped exactly where the real photo will sit. Dropping in real work is one line per slot — set <code>--img:url('photos/mainstage.jpg')</code> on that slot and the placeholder steps aside.</p>
+    <p style="margin-top:14px"><b>Nothing is live.</b> These are working files under <code>mockups/</code>. The site at deck.seasakproductions.com is untouched until you pick a direction — then it gets folded into <code>index.html</code> and pushed.</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — 09 Ground Up</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     09 — GROUND UP
+     The differentiator isn't gear, it's that the plan exists before
+     the steel does. So the hero draws a site plan over an empty
+     field: boundary, stage, FOH, truck route, power runs, crowd.
+     Needs almost no photography — the drawing is the asset — and it
+     shows the one thing competitors can't fake in a stock photo.
+     ============================================================ */
+  :root{ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+  .gu-hero{position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+  .gu-bk{position:absolute;inset:0;opacity:.26}
+  .gu-bk::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse 76% 66% at 50% 46%,transparent,rgba(5,6,8,.95) 80%),
+               linear-gradient(180deg,rgba(5,6,8,.8),rgba(5,6,8,.3) 42%,rgba(5,6,8,.96))}
+  /* survey grid, faint, so the plan reads as drawn on ground */
+  .gu-grid{position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(rgba(127,195,255,.055) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(127,195,255,.055) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 66% 58% at 50% 46%,#000,transparent 78%);
+    -webkit-mask-image:radial-gradient(ellipse 66% 58% at 50% 46%,#000,transparent 78%)}
+
+  .gu-plan{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:3vw;pointer-events:none}
+  /* the drawing holds the right; the annotation block holds the left, so
+     neither has to sit on top of the other */
+  .gu-plan svg{width:min(860px,62vw);height:auto;overflow:visible}
+
+  /* the draw-on */
+  .gu-plan .ln{fill:none;stroke:rgba(127,195,255,.55);stroke-width:1.2;
+    stroke-dasharray:var(--len,1400);stroke-dashoffset:var(--len,1400);
+    animation:guDraw 1.5s ease forwards var(--d,0s)}
+  .gu-plan .ln.solid{stroke:rgba(210,228,245,.75);stroke-width:1.6}
+  .gu-plan .ln.route{stroke:rgba(255,154,77,.75);stroke-width:1.5;stroke-dasharray:8 7;
+    animation:guRoute 1.6s ease forwards var(--d,0s),guCrawl 22s linear infinite 2s}
+  @keyframes guDraw{to{stroke-dashoffset:0}}
+  @keyframes guRoute{from{opacity:0}to{opacity:1}}
+  @keyframes guCrawl{to{stroke-dashoffset:-300}}
+  .gu-plan .fillz{fill:rgba(127,195,255,.05);stroke:none;opacity:0;animation:guFade .9s ease forwards var(--d,0s)}
+  .gu-plan .hatch{fill:url(#guHatch);stroke:none;opacity:0;animation:guFade .9s ease forwards var(--d,0s)}
+  @keyframes guFade{to{opacity:1}}
+  .gu-plan .lbl{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9.5px;letter-spacing:.16em;
+    fill:rgba(226,235,245,.82);text-transform:uppercase;opacity:0;animation:guFade .7s ease forwards var(--d,0s)}
+  .gu-plan .lbl.dim{fill:rgba(140,150,164,.75)}
+  .gu-plan .lbl.warm{fill:rgba(255,178,120,.9)}
+  .gu-plan .node{fill:#fff;opacity:0;animation:guFade .5s ease forwards var(--d,0s)}
+  .gu-plan .node.warm{fill:var(--warm)}
+
+  .gu-copy{position:relative;z-index:6;max-width:var(--maxw);margin:0 auto;padding:0 24px;width:100%;
+    display:flex;flex-direction:column;align-items:flex-start}
+  .gu-copy .in{max-width:34ch}
+  .gu-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);
+    font-weight:600;margin-bottom:24px;opacity:0;animation:guUp .9s ease forwards 2.1s}
+  .gu-h1{font-size:clamp(28px,5.2vw,60px);font-weight:700;letter-spacing:-.03em;line-height:1.07;
+    background:linear-gradient(180deg,#fff,#a3accb);-webkit-background-clip:text;background-clip:text;color:transparent;
+    opacity:0;animation:guUp .9s ease forwards 2.25s}
+  .gu-sub{margin-top:24px;max-width:50ch;font-size:clamp(14px,1.6vw,17px);color:#a8b0bc;line-height:1.76;
+    opacity:0;animation:guUp .9s ease forwards 2.45s}
+  @keyframes guUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  /* ============================================================
+     PLAN → PLOT → SHOW
+     ============================================================ */
+  .gu-three{padding:14vh 24px;border-top:1px solid var(--line)}
+  .gu-three .hd{max-width:var(--maxw);margin:0 auto 62px}
+  .gu-three h2{font-size:clamp(22px,3.4vw,40px);font-weight:700;letter-spacing:-.022em;line-height:1.14;max-width:20ch}
+  .gu-three .hd p{margin-top:20px;max-width:56ch;color:var(--muted);font-size:clamp(14px,1.5vw,16px);line-height:1.75}
+  .gu-cols{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+  .gu-c{background:#070a0e;padding:36px 28px 40px}
+  .gu-c .k{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .gu-c h3{margin-top:18px;font-size:clamp(17px,2.1vw,22px);font-weight:600;letter-spacing:-.014em}
+  .gu-c p{margin-top:14px;font-size:13.5px;color:var(--muted);line-height:1.7}
+  .gu-c ul{margin-top:18px;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .gu-c li{font-size:12.5px;color:#b9c1cc;display:flex;gap:10px;align-items:baseline}
+  .gu-c li::before{content:"";width:4px;height:4px;background:rgba(127,195,255,.7);flex:none;transform:rotate(45deg)}
+
+  @media(max-width:900px){
+    .gu-hero{min-height:100svh;padding-top:12vh}
+    .gu-plan{opacity:.55;align-items:flex-start;justify-content:center;padding:14vh 0 0}
+    .gu-plan svg{width:94vw}
+    .gu-copy .in{max-width:none}
+    .gu-copy .in{background:none;padding:0}
+    .gu-cols{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#how">How</a><a href="#events">Events</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#how">How</a><a href="#events">Events</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="gu-hero" id="top">
+  <div class="gu-bk slot slot--soft slot--music slot--truck" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="gu-grid" aria-hidden="true"></div>
+
+  <div class="gu-plan" aria-hidden="true">
+    <svg viewBox="0 0 1200 660">
+      <defs>
+        <pattern id="guHatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(127,195,255,.18)" stroke-width="1"/>
+        </pattern>
+      </defs>
+
+      <!-- site boundary -->
+      <rect class="ln" style="--len:3000;--d:.1s" x="60" y="46" width="1080" height="568" rx="4"/>
+
+      <!-- main stage + roof -->
+      <rect class="fillz" style="--d:1.1s" x="452" y="86" width="296" height="96"/>
+      <rect class="ln solid" style="--len:800;--d:.5s" x="452" y="86" width="296" height="96"/>
+      <path class="ln" style="--len:420;--d:.8s" d="M452 86 L600 42 L748 86"/>
+      <text class="lbl" x="600" y="140" text-anchor="middle">Main Stage</text>
+      <text class="lbl dim" x="600" y="158" text-anchor="middle">Roof · PA wings</text>
+
+      <!-- sub stages -->
+      <rect class="ln" style="--len:400;--d:1.0s" x="96" y="300" width="150" height="70"/>
+      <text class="lbl" x="171" y="341" text-anchor="middle">Sub Stage A</text>
+      <rect class="ln" style="--len:400;--d:1.1s" x="954" y="300" width="150" height="70"/>
+      <text class="lbl" x="1029" y="341" text-anchor="middle">Sub Stage B</text>
+
+      <!-- crowd zone -->
+      <path class="hatch" style="--d:1.3s" d="M420 200 L780 200 L880 520 L320 520 Z"/>
+      <path class="ln" style="--len:1700;--d:.9s" d="M420 200 L780 200 L880 520 L320 520 Z"/>
+      <text class="lbl dim" x="600" y="370" text-anchor="middle">Crowd Zone</text>
+
+      <!-- FOH -->
+      <rect class="ln solid" style="--len:220;--d:1.2s" x="562" y="452" width="76" height="46"/>
+      <text class="lbl" x="600" y="480" text-anchor="middle">F.O.H.</text>
+
+      <!-- power: generator to stage -->
+      <rect class="ln" style="--len:200;--d:1.35s" x="806" y="128" width="62" height="40"/>
+      <text class="lbl dim" x="837" y="152" text-anchor="middle">Gen</text>
+      <path class="ln" style="--len:200;--d:1.5s" d="M806 148 L748 148"/>
+      <circle class="node" style="--d:1.75s" cx="748" cy="148" r="3.4"/>
+      <text class="lbl dim" x="880" y="152">Distro · tie-in</text>
+
+      <!-- truck route -->
+      <path class="ln route" style="--d:1.55s" d="M60 590 L300 590 Q420 590 470 520 T600 300 L600 190"/>
+      <circle class="node warm" style="--d:2.0s" cx="60" cy="590" r="4"/>
+      <text class="lbl warm" x="76" y="612">Gate · truck route</text>
+      <circle class="node warm" style="--d:2.1s" cx="600" cy="190" r="4"/>
+
+      <!-- dimension line -->
+      <path class="ln" style="--len:1120;--d:1.7s" d="M60 636 L1140 636 M60 630 L60 642 M1140 630 L1140 642"/>
+      <text class="lbl dim" x="600" y="630" text-anchor="middle">Site boundary</text>
+    </svg>
+  </div>
+
+  <div class="gu-copy">
+    <div class="in">
+      <div class="gu-eyebrow">Event Solutions</div>
+      <h1 class="gu-h1">It's a drawing<br>before it's a build.</h1>
+      <p class="gu-sub">Site plans, stage plots and load-in sequences drawn to scale before a truck is booked — then staging, power, trucking and crew to put it in the ground. Same team draws it and builds it, which is why it fits.</p>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
+</section>
+
+<!-- ================= PLAN / BUILD / RUN ================= -->
+<section class="gu-three" id="how">
+  <div class="hd reveal">
+    <h2>Drawn, built and run by the same people.</h2>
+    <p>Most scopes get handed between a designer, a vendor and a crew chief, and the gaps between them are where show days go wrong. We hold all three, so the plan that gets drawn is the plan that gets built.</p>
+  </div>
+  <div class="gu-cols reveal">
+    <div class="gu-c">
+      <div class="k">01 — Plan</div>
+      <h3>Draw it to scale</h3>
+      <p>Site plans, sightlines, stage plots and a load-in sequence that accounts for the dock you actually have.</p>
+      <ul><li>CAD site plans</li><li>Stage plots &amp; patch</li><li>Truck &amp; yard sequencing</li><li>Run of show</li></ul>
+    </div>
+    <div class="gu-c">
+      <div class="k">02 — Build</div>
+      <h3>Put it in the ground</h3>
+      <p>Steel, roof, power and the crew to move it — sized to the build and stewarded to the schedule.</p>
+      <ul><li>Staging &amp; roof systems</li><li>Generators &amp; distro</li><li>Trucking &amp; yard control</li><li>Stagehand calls</li></ul>
+    </div>
+    <div class="gu-c">
+      <div class="k">03 — Run</div>
+      <h3>Hold it together</h3>
+      <p>Comms, changeovers, hospitality and advance — from doors until the site is handed back.</p>
+      <ul><li>Show operations</li><li>Artist &amp; speaker advance</li><li>Hospitality &amp; credentials</li><li>Strike &amp; handback</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVENTS / CLIENTS ================= -->
+<section class="clients" id="events" style="padding:12vh 24px 8vh;border-top:1px solid var(--line)">
+  <div class="clients-label reveal">Selected Events</div>
+  <div class="client-wall reveal">
+    <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
+    <span>NFL Draft</span><span>Minnesota State Fair</span><span>Innings &amp; Extra Innings</span>
+    <span>Milwaukee Metal Fest</span><span>Point Break Fest</span>
+  </div>
+</section>
+<section class="clients" id="clients" style="padding:0 24px 18vh">
+  <div class="clients-label reveal">Hired By</div>
+  <div class="client-wall reveal">
+    <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+    <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+    <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+  </div>
+</section>
+
+<section class="contact">
+  <h2 class="reveal">Bring us the date.<br><span>We'll bring the show.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer><div class="wrap foot">
+  <div class="mark">SEASAK PRODUCTIONS</div><div class="meta">Event Solutions</div>
+</div></footer>
+
+<div class="mk-badge">Mockup <b>9</b> · Ground Up <a href="index.html">All directions →</a></div>
+<script src="_shared.js"></script>
+</body>
+</html>

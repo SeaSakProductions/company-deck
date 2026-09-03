@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — 06 The Roster</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     06 — THE ROSTER
+     The strongest asset on file is the event list. So the list IS
+     the hero: one full-bleed frame at a time, graded down, with the
+     event named and — crucially — what SeaSak actually ran on it.
+     A photo that says BottleRock is proof. An uncaptioned photo is
+     wallpaper. Never two images on screen at once.
+     ============================================================ */
+  .rs-hero{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:flex-end}
+
+  .rs-frame{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease, transform 9s linear}
+  .rs-frame.on{opacity:1;transform:scale(1.06)}          /* slow push keeps stills alive */
+  .rs-frame::after{                                       /* the grade: type must land on black */
+    content:"";position:absolute;inset:0;z-index:2;
+    background:
+      linear-gradient(180deg,rgba(5,6,8,.86) 0%,rgba(5,6,8,.30) 34%,rgba(5,6,8,.20) 50%,rgba(5,6,8,.94) 92%),
+      linear-gradient(90deg,rgba(5,6,8,.80),transparent 55%);
+  }
+  .rs-vig{position:absolute;inset:0;z-index:3;pointer-events:none;
+    box-shadow:inset 0 0 200px 60px rgba(5,6,8,.9)}
+
+  .rs-body{position:relative;z-index:6;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px 12vh}
+  .rs-eyebrow{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:26px}
+  .rs-h1{
+    font-size:clamp(30px,5.6vw,68px);font-weight:700;letter-spacing:-.028em;line-height:1.06;max-width:16ch;
+    background:linear-gradient(180deg,#fff,#a7b0bd);-webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .rs-sub{margin-top:24px;max-width:52ch;font-size:clamp(14px,1.6vw,17px);color:#aab2be;line-height:1.72}
+
+  /* --- the caption: the proof mechanic --- */
+  .rs-cap{margin-top:52px;display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap}
+  .rs-cap .now{min-width:0}
+  .rs-cap .ev{font-size:clamp(15px,2vw,21px);font-weight:600;letter-spacing:.02em;color:#fff;
+    display:block;transition:opacity .5s}
+  .rs-cap .ran{display:block;margin-top:9px;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;transition:opacity .5s}
+  .rs-cap .meta{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:600}
+
+  /* --- ticks: which frame, and a scrubber --- */
+  .rs-ticks{display:flex;gap:7px;margin-left:auto;align-items:center}
+  .rs-ticks button{width:34px;height:2px;border:0;padding:0;cursor:pointer;background:rgba(255,255,255,.20);
+    position:relative;overflow:hidden;transition:background .3s}
+  .rs-ticks button::after{content:"";position:absolute;inset:0;transform:scaleX(0);transform-origin:left;background:var(--accent)}
+  .rs-ticks button.on::after{animation:rsFill 6s linear forwards}
+  @keyframes rsFill{to{transform:scaleX(1)}}
+  .rs-ticks button:hover{background:rgba(255,255,255,.45)}
+
+  /* ============================================================
+     WHAT WE RUN — kept plain; the audience is a production manager
+     ============================================================ */
+  .rs-scope{padding:14vh 24px 12vh;border-top:1px solid var(--line)}
+  .rs-scope .lead{max-width:var(--maxw);margin:0 auto 66px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end}
+  .rs-scope h2{font-size:clamp(22px,3.4vw,40px);font-weight:700;letter-spacing:-.022em;line-height:1.14}
+  .rs-scope .lead p{color:var(--muted);font-size:clamp(14px,1.5vw,16px);line-height:1.75}
+  .rs-grid{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+  .rs-cell{background:#070a0e;padding:30px 24px 34px;transition:background .3s}
+  .rs-cell:hover{background:#0c1219}
+  .rs-cell .n{font-size:10px;letter-spacing:.24em;color:var(--faint);font-weight:700}
+  .rs-cell .t{margin-top:16px;font-size:clamp(15px,1.8vw,19px);font-weight:600;letter-spacing:-.01em}
+  .rs-cell .d{margin-top:11px;font-size:13px;color:var(--muted);line-height:1.62}
+
+  @media(max-width:900px){
+    .rs-hero{min-height:100svh}
+    .rs-body{padding:0 20px 9vh}
+    .rs-cap{margin-top:34px;gap:18px}
+    .rs-ticks{margin-left:0;width:100%;order:3}
+    .rs-scope .lead{grid-template-columns:1fr;gap:22px;margin-bottom:44px}
+    .rs-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:520px){ .rs-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#scope">What We Run</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#scope">What We Run</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="rs-hero" id="top">
+  <div class="rs-frame slot slot--soft slot--music slot--stage on" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="rs-frame slot slot--soft slot--music slot--crowd"    aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="rs-frame slot slot--soft slot--corp  slot--expo"     aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="rs-frame slot slot--soft slot--music slot--truck"    aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="rs-frame slot slot--soft slot--corp  slot--keynote"  aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="rs-vig" aria-hidden="true"></div>
+
+  <div class="rs-body">
+    <div class="rs-eyebrow">Event Solutions</div>
+    <h1 class="rs-h1">We build the shows you've already been to.</h1>
+    <p class="rs-sub">Staging, power, trucking and crew for festivals, fairs and national broadcast events — hired by the promoters and production companies who can't afford it to go wrong.</p>
+
+    <div class="rs-cap">
+      <div class="now">
+        <span class="ev" id="rsEv">BottleRock Napa Valley</span>
+        <span class="ran" id="rsRan">Staging · Power · Labor</span>
+      </div>
+      <div class="rs-ticks" id="rsTicks" role="tablist" aria-label="Selected events"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHAT WE RUN ================= -->
+<section class="rs-scope" id="scope">
+  <div class="lead reveal">
+    <h2>Eight departments.<br>One point of contact.</h2>
+    <p>Most of our work comes from people who already do this for a living — promoters, production companies and rental houses who need a scope taken off their plate and handed back finished. That's the whole business.</p>
+  </div>
+  <div class="rs-grid reveal">
+    <div class="rs-cell"><div class="n">01</div><div class="t">Staging</div><div class="d">Main stage, sub-stages, risers, roof systems</div></div>
+    <div class="rs-cell"><div class="n">02</div><div class="t">Power</div><div class="d">Distro, generators, shore tie-in, redundancy</div></div>
+    <div class="rs-cell"><div class="n">03</div><div class="t">Trucking</div><div class="d">Routing, load-in windows, dock and yard control</div></div>
+    <div class="rs-cell"><div class="n">04</div><div class="t">Labor</div><div class="d">Stagehands, forklifts, steward and call management</div></div>
+    <div class="rs-cell"><div class="n">05</div><div class="t">Design</div><div class="d">Site plans, CAD, stage plots, sightlines</div></div>
+    <div class="rs-cell"><div class="n">06</div><div class="t">Operations</div><div class="d">Schedules, comms, vendor and venue coordination</div></div>
+    <div class="rs-cell"><div class="n">07</div><div class="t">Hospitality</div><div class="d">Catering, green rooms, travel, credentials</div></div>
+    <div class="rs-cell"><div class="n">08</div><div class="t">Artist Advance</div><div class="d">Riders, tech packs, day sheets, speaker prep</div></div>
+  </div>
+</section>
+
+<!-- ================= CLIENTS ================= -->
+<section class="clients" id="clients" style="padding:0 24px 18vh">
+  <div class="clients-label reveal">Hired By</div>
+  <div class="client-wall reveal">
+    <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+    <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+    <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+  </div>
+</section>
+
+<section class="contact">
+  <h2 class="reveal">Bring us the date.<br><span>We'll bring the show.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer><div class="wrap foot">
+  <div class="mark">SEASAK PRODUCTIONS</div><div class="meta">Event Solutions</div>
+</div></footer>
+
+<div class="mk-badge">Mockup <b>6</b> · The Roster <a href="index.html">All directions →</a></div>
+
+<script src="_shared.js"></script>
+<script>
+/* The roster drives the hero. Each frame is an event plus what we ran on it —
+   the pairing is the point, so the caption changes with the image, never after. */
+(function(){
+  const ROSTER = [
+    {ev:'BottleRock Napa Valley',    ran:'Staging · Power · Labor'},
+    {ev:'Lollapalooza',              ran:'Staging · Trucking · Crew'},
+    {ev:'NFL Draft',                 ran:'Staging · Design · Operations'},
+    {ev:'Minnesota State Fair',      ran:'Power · Trucking · Labor'},
+    {ev:'Boston Calling',            ran:'Staging · Artist Advance'}
+  ];
+  const frames=[...document.querySelectorAll('.rs-frame')];
+  const ticks=document.getElementById('rsTicks');
+  const ev=document.getElementById('rsEv'), ran=document.getElementById('rsRan');
+  let i=0, timer;
+
+  ROSTER.forEach((r,n)=>{
+    const b=document.createElement('button');
+    b.setAttribute('role','tab'); b.setAttribute('aria-label',r.ev);
+    b.addEventListener('click',()=>go(n,true));
+    ticks.appendChild(b);
+  });
+  const btns=[...ticks.children];
+
+  function go(n,manual){
+    i=n;
+    frames.forEach((f,k)=>f.classList.toggle('on',k===i));
+    btns.forEach((b,k)=>{ b.classList.remove('on'); if(k===i){ void b.offsetWidth; b.classList.add('on'); } });
+    ev.style.opacity=ran.style.opacity=0;
+    setTimeout(()=>{ ev.textContent=ROSTER[i].ev; ran.textContent=ROSTER[i].ran;
+                     ev.style.opacity=ran.style.opacity=1; },330);
+    if(manual){ clearInterval(timer); timer=setInterval(next,6000); }
+  }
+  function next(){ go((i+1)%ROSTER.length); }
+  go(0); timer=setInterval(next,6000);
+})();
+</script>
+</body>
+</html>
