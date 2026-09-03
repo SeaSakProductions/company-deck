@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — 10 Blueprint</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     10 — BLUEPRINT
+     One site plan holds the whole page. Scrolling isolates one
+     department at a time the way CAD layers do — its geometry
+     draws in, everything else drops back — so all eight are shown
+     on the same drawing rather than listed as words. The last step
+     wipes the drawing into the built event: paper, then real.
+     ============================================================ */
+  :root{ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+  /* ---------- opening ---------- */
+  .bp-open{position:relative;min-height:88vh;display:flex;align-items:center;padding:16vh 24px 8vh;overflow:hidden}
+  .bp-open .gd{position:absolute;inset:0;opacity:.45;
+    background-image:linear-gradient(rgba(127,195,255,.06) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(127,195,255,.06) 1px,transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%)}
+  .bp-open .in{position:relative;z-index:3;max-width:var(--maxw);margin:0 auto;width:100%}
+  .bp-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:24px}
+  .bp-h1{font-size:clamp(27px,4.4vw,54px);font-weight:700;letter-spacing:-.028em;line-height:1.08;max-width:19ch;
+    background:linear-gradient(180deg,#fff,#a3accb);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .bp-lede{margin-top:24px;max-width:54ch;font-size:clamp(14px,1.6vw,17px);color:#a8b0bc;line-height:1.76}
+
+  /* ---------- the scroll stage ---------- */
+  .bp-stage{position:relative}
+  .bp-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+  .bp-grid{position:absolute;inset:0;opacity:.4;
+    background-image:linear-gradient(rgba(127,195,255,.055) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(127,195,255,.055) 1px,transparent 1px);
+    background-size:44px 44px}
+
+  .bp-inner{position:relative;z-index:4;width:100%;max-width:1280px;margin:0 auto;padding:0 30px;
+    display:grid;grid-template-columns:224px 1fr;gap:38px;align-items:center}
+
+  /* ---------- layer panel ---------- */
+  .bp-panel{border:1px solid var(--line);background:rgba(7,10,15,.72);backdrop-filter:blur(4px)}
+  .bp-panel .hd{padding:13px 15px;border-bottom:1px solid var(--line);font-family:var(--mono);
+    font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:700;
+    display:flex;justify-content:space-between}
+  .bp-panel .hd em{font-style:normal;color:var(--accent)}
+  .bp-lay{display:flex;align-items:center;gap:10px;padding:10px 15px;border-bottom:1px solid rgba(255,255,255,.045);
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;transition:color .35s,background .35s}
+  .bp-lay:last-child{border-bottom:0}
+  .bp-lay .sw{width:8px;height:8px;flex:none;border:1px solid rgba(255,255,255,.22);transform:rotate(45deg);
+    transition:background .35s,border-color .35s,box-shadow .35s}
+  .bp-lay .no{margin-left:auto;font-size:9px;color:rgba(255,255,255,.14)}
+  .bp-lay.on{color:#fff;background:rgba(127,195,255,.07)}
+  .bp-lay.on .sw{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px 2px rgba(127,195,255,.55)}
+  .bp-lay.on .no{color:var(--accent)}
+
+  /* ---------- drawing ---------- */
+  .bp-draw{position:relative}
+  .bp-draw svg{width:100%;height:auto;display:block;overflow:visible}
+
+  .lay{opacity:.13;transition:opacity .65s ease}
+  .lay.on{opacity:1}
+  .lay .ln{fill:none;stroke:rgba(127,195,255,.62);stroke-width:1.25;
+    stroke-dasharray:100;stroke-dashoffset:0;vector-effect:non-scaling-stroke}
+  .lay.on .ln{stroke:rgba(224,238,255,.95);animation:bpDraw 1.05s ease forwards}
+  .lay.on .ln.warm{stroke:rgba(255,176,110,.95)}
+  @keyframes bpDraw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+  .lay .fz{fill:rgba(127,195,255,.06);stroke:none}
+  .lay.on .fz{fill:rgba(127,195,255,.12)}
+  .lay .hz{fill:url(#bpHatch);stroke:none}
+  .lay .dot{fill:rgba(224,238,255,.9)}
+  .lay .dot.warm{fill:var(--warm)}
+  .lay .lb{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.4px;letter-spacing:.13em;
+    fill:rgba(226,238,250,.9);text-transform:uppercase;opacity:0;transition:opacity .5s ease .25s}
+  .lay.on .lb{opacity:1}
+  .lay .lb.warm{fill:rgba(255,186,130,.95)}
+  /* the base sheet never fully drops away — it is the paper */
+  .lay.base{opacity:.3}
+  .lay.base.on{opacity:1}
+
+  /* ---------- the built reveal ---------- */
+  .bp-canvas{position:relative}
+  .bp-canvas svg{position:relative;z-index:2;max-height:58vh}
+  .bp-real{position:absolute;inset:0;z-index:1;clip-path:inset(0 100% 0 0);
+    transition:clip-path 1.5s cubic-bezier(.65,.02,.28,1)}
+  .bp-real.on{clip-path:inset(0 0 0 0)}
+  .bp-real .slot__ph{position:absolute;inset:0}
+  .bp-real::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(5,6,8,.42),rgba(5,6,8,.12) 45%,rgba(5,6,8,.72))}
+  .bp-stage.built .lay .ln{stroke:rgba(206,228,250,.55)}
+   /* every layer is on at once here, so the callouts collide — drop all but
+     the sheet's own, and let the geometry read against the photograph */
+  .bp-stage.built .lay .lb{opacity:0}
+  .bp-stage.built .lay.base .lb{opacity:1;fill:rgba(226,238,250,.8)}
+  .bp-stage.built .lay .fz{fill:rgba(127,195,255,.05)}
+
+  /* ---------- caption ---------- */
+  .bp-cap{margin-top:24px;padding-left:2px}
+  .bp-cap .k{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+    color:var(--accent);font-weight:700}
+  .bp-cap h2{margin-top:12px;font-size:clamp(19px,2.5vw,29px);font-weight:700;letter-spacing:-.018em;line-height:1.16}
+  .bp-cap p{margin-top:11px;max-width:56ch;font-size:14px;color:#a8b0bc;line-height:1.68}
+  .bp-cap .fade{transition:opacity .35s ease}
+
+  /* ---------- scroll steps ---------- */
+  .bp-step{height:100vh;pointer-events:none}
+  .bp-step:first-child{height:60vh}
+
+  /* ---------- after ---------- */
+  .bp-after{padding:16vh 24px 12vh;border-top:1px solid var(--line);text-align:center}
+  .bp-after h2{font-size:clamp(22px,3.2vw,38px);font-weight:700;letter-spacing:-.022em;line-height:1.16;max-width:22ch;margin:0 auto}
+  .bp-after p{margin:22px auto 0;max-width:58ch;color:var(--muted);font-size:clamp(14px,1.5vw,16px);line-height:1.76}
+
+  @media(max-width:1000px){
+    .bp-inner{grid-template-columns:1fr;gap:20px}
+    .bp-panel{display:none}
+    .bp-cap{position:static;margin-top:26px}
+    .bp-sticky{height:100svh;align-items:flex-start;padding-top:12vh}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#plan">What We Run</a><a href="#events">Events</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#plan">What We Run</a><a href="#events">Events</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<!-- ================= OPENING ================= -->
+<section class="bp-open" id="top">
+  <div class="gd" aria-hidden="true"></div>
+  <div class="in">
+    <div class="bp-eyebrow">Event Solutions</div>
+    <h1 class="bp-h1">Every department, drawn on one plan.</h1>
+    <p class="bp-lede">Staging, power, trucking, labor, design, operations, hospitality and artist advance — planned to scale on the same site plan, then built by the same team. Scroll to take the drawing apart layer by layer.</p>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
+</section>
+
+<!-- ================= THE PLAN ================= -->
+<section class="bp-stage" id="plan">
+  <div class="bp-sticky">
+    <div class="bp-grid" aria-hidden="true"></div>
+    <div class="bp-inner">
+
+      <aside class="bp-panel" aria-hidden="true">
+        <div class="hd"><span>Layers</span><em id="bpCount">01/08</em></div>
+        <div class="bp-lay" data-k="design"><span class="sw"></span>Design<span class="no">01</span></div>
+        <div class="bp-lay" data-k="staging"><span class="sw"></span>Staging<span class="no">02</span></div>
+        <div class="bp-lay" data-k="power"><span class="sw"></span>Power<span class="no">03</span></div>
+        <div class="bp-lay" data-k="trucking"><span class="sw"></span>Trucking<span class="no">04</span></div>
+        <div class="bp-lay" data-k="labor"><span class="sw"></span>Labor<span class="no">05</span></div>
+        <div class="bp-lay" data-k="ops"><span class="sw"></span>Operations<span class="no">06</span></div>
+        <div class="bp-lay" data-k="hosp"><span class="sw"></span>Hospitality<span class="no">07</span></div>
+        <div class="bp-lay" data-k="advance"><span class="sw"></span>Artist Advance<span class="no">08</span></div>
+      </aside>
+
+      <div class="bp-draw">
+        <div class="bp-canvas">
+        <!-- the built photograph, revealed by wipe on the last step, behind the linework -->
+        <div class="bp-real slot slot--music slot--stage" id="bpReal" aria-hidden="true"><div class="slot__ph"></div></div>
+
+        <svg viewBox="0 0 1000 600" role="img" aria-label="Event site plan">
+          <defs>
+            <pattern id="bpHatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(127,195,255,.16)" stroke-width="1"/>
+            </pattern>
+          </defs>
+
+          <!-- 01 DESIGN — the sheet: boundary, crowd envelope, dimensions -->
+          <g class="lay base" data-k="design">
+            <rect class="ln" pathLength="100" x="34" y="26" width="932" height="548"/>
+            <path class="hz" d="M348 214 L652 214 L742 496 L258 496 Z"/>
+            <path class="ln" pathLength="100" d="M348 214 L652 214 L742 496 L258 496 Z"/>
+            <path class="ln" pathLength="100" d="M34 592 L966 592 M34 585 L34 599 M966 585 L966 599"/>
+            <text class="lb" x="500" y="586" text-anchor="middle">Site boundary · to scale</text>
+            <text class="lb" x="500" y="360" text-anchor="middle">Crowd envelope</text>
+            <text class="lb" x="44" y="44">Sheet 01 · Site plan</text>
+          </g>
+
+          <!-- 02 STAGING -->
+          <g class="lay" data-k="staging">
+            <rect class="fz" x="380" y="118" width="240" height="84"/>
+            <rect class="ln" pathLength="100" x="380" y="118" width="240" height="84"/>
+            <path class="ln" pathLength="100" d="M380 118 L500 74 L620 118"/>
+            <text class="lb" x="500" y="150" text-anchor="middle">Main stage</text>
+            <text class="lb" x="500" y="166" text-anchor="middle">Roof · PA wings</text>
+            <rect class="ln" pathLength="100" x="66" y="250" width="118" height="62"/>
+            <text class="lb" x="125" y="285" text-anchor="middle">Sub stage A</text>
+            <rect class="ln" pathLength="100" x="816" y="250" width="118" height="62"/>
+            <text class="lb" x="875" y="285" text-anchor="middle">Sub stage B</text>
+            <rect class="ln" pathLength="100" x="300" y="206" width="60" height="26"/>
+            <text class="lb" x="330" y="222" text-anchor="middle">Riser</text>
+            <rect class="ln" pathLength="100" x="640" y="206" width="60" height="26"/>
+            <text class="lb" x="670" y="222" text-anchor="middle">Riser</text>
+          </g>
+
+          <!-- 03 POWER -->
+          <g class="lay" data-k="power">
+            <rect class="ln" pathLength="100" x="706" y="118" width="58" height="38"/>
+            <text class="lb" x="735" y="141" text-anchor="middle">Gen</text>
+            <path class="ln" pathLength="100" d="M706 137 L620 137"/>
+            <circle class="dot" cx="620" cy="137" r="3.2"/>
+            <text class="lb" x="770" y="141">Distro · shore tie-in</text>
+            <path class="ln" pathLength="100" d="M735 156 L735 281 L934 281"/>
+            <circle class="dot" cx="934" cy="281" r="3.2"/>
+            <path class="ln" pathLength="100" d="M706 137 L250 137 L250 281 L184 281"/>
+            <circle class="dot" cx="184" cy="281" r="3.2"/>
+            <text class="lb" x="258" y="130">Feeder run</text>
+          </g>
+
+          <!-- 04 TRUCKING -->
+          <g class="lay" data-k="trucking">
+            <rect class="ln warm" pathLength="100" x="58" y="452" width="150" height="96"/>
+            <text class="lb warm" x="133" y="504" text-anchor="middle">Marshalling yard</text>
+            <path class="ln warm" pathLength="100" d="M34 540 L58 540"/>
+            <circle class="dot warm" cx="34" cy="540" r="4"/>
+            <text class="lb warm" x="44" y="564">Gate</text>
+            <path class="ln warm" pathLength="100" d="M208 476 Q286 476 300 380 T322 130 L332 108"/>
+            <text class="lb warm" x="238" y="452">Truck route</text>
+            <rect class="ln warm" pathLength="100" x="330" y="34" width="86" height="34"/>
+            <text class="lb warm" x="373" y="55" text-anchor="middle">Dock</text>
+          </g>
+
+          <!-- 05 LABOR -->
+          <g class="lay" data-k="labor">
+            <path class="ln" pathLength="100" d="M494 108 L506 108 M500 102 L500 114"/>
+            <path class="ln" pathLength="100" d="M119 244 L131 244 M125 238 L125 250"/>
+            <path class="ln" pathLength="100" d="M869 244 L881 244 M875 238 L875 250"/>
+            <path class="ln" pathLength="100" d="M127 446 L139 446 M133 440 L133 452"/>
+            <path class="ln" pathLength="100" d="M367 72 L379 72 M373 66 L373 78"/>
+            <text class="lb" x="500" y="96" text-anchor="middle">Deck call</text>
+            <text class="lb" x="125" y="232" text-anchor="middle">Call A</text>
+            <text class="lb" x="875" y="232" text-anchor="middle">Call B</text>
+            <text class="lb" x="133" y="434" text-anchor="middle">Forklift ops</text>
+            <text class="lb" x="373" y="60" text-anchor="middle">Steward</text>
+            <rect class="ln" pathLength="100" x="424" y="34" width="86" height="34"/>
+            <text class="lb" x="467" y="55" text-anchor="middle">Crew check-in</text>
+          </g>
+
+          <!-- 06 OPERATIONS -->
+          <g class="lay" data-k="ops">
+            <rect class="fz" x="466" y="418" width="68" height="42"/>
+            <rect class="ln" pathLength="100" x="466" y="418" width="68" height="42"/>
+            <text class="lb" x="500" y="444" text-anchor="middle">F.O.H.</text>
+            <rect class="ln" pathLength="100" x="518" y="34" width="94" height="34"/>
+            <text class="lb" x="565" y="55" text-anchor="middle">Production office</text>
+            <path class="ln" pathLength="100" d="M500 418 L500 240"/>
+            <path class="ln" pathLength="100" d="M534 439 L735 439 L735 300"/>
+            <path class="ln" pathLength="100" d="M466 439 L265 439 L265 300"/>
+            <circle class="dot" cx="500" cy="240" r="3"/>
+            <circle class="dot" cx="735" cy="300" r="3"/>
+            <circle class="dot" cx="265" cy="300" r="3"/>
+            <text class="lb" x="546" y="410">Comms positions</text>
+          </g>
+
+          <!-- 07 HOSPITALITY -->
+          <g class="lay" data-k="hosp">
+            <rect class="ln" pathLength="100" x="620" y="34" width="80" height="34"/>
+            <text class="lb" x="660" y="55" text-anchor="middle">Green room</text>
+            <rect class="ln" pathLength="100" x="708" y="34" width="80" height="34"/>
+            <text class="lb" x="748" y="55" text-anchor="middle">Dressing</text>
+            <rect class="ln" pathLength="100" x="796" y="34" width="96" height="34"/>
+            <text class="lb" x="844" y="55" text-anchor="middle">Catering</text>
+            <path class="ln" pathLength="100" d="M660 68 L660 92 L560 92"/>
+            <text class="lb" x="568" y="106">Backstage compound</text>
+          </g>
+
+          <!-- 08 ARTIST ADVANCE -->
+          <g class="lay" data-k="advance">
+            <rect class="ln warm" pathLength="100" x="796" y="92" width="140" height="46"/>
+            <text class="lb warm" x="866" y="120" text-anchor="middle">Bus parking</text>
+            <path class="ln warm" pathLength="100" d="M796 115 Q680 115 640 108 T560 100 L560 118"/>
+            <circle class="dot warm" cx="560" cy="118" r="3.6"/>
+            <text class="lb warm" x="612" y="136">Artist path to deck</text>
+            <text class="lb warm" x="806" y="156">Riders · tech packs · day sheets</text>
+          </g>
+        </svg>
+        </div>
+
+        <div class="bp-cap">
+          <div class="k fade" id="bpK">Layer 01 — Design</div>
+          <h2 class="fade" id="bpT">Site plans, drawn to scale</h2>
+          <p class="fade" id="bpD">Boundary, sightlines and crowd envelope set before anything else is placed. Every layer that follows is drawn onto this sheet.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- one viewport per layer, plus the built step -->
+  <div class="bp-step" data-k="design"></div>
+  <div class="bp-step" data-k="staging"></div>
+  <div class="bp-step" data-k="power"></div>
+  <div class="bp-step" data-k="trucking"></div>
+  <div class="bp-step" data-k="labor"></div>
+  <div class="bp-step" data-k="ops"></div>
+  <div class="bp-step" data-k="hosp"></div>
+  <div class="bp-step" data-k="advance"></div>
+  <div class="bp-step" data-k="built"></div>
+</section>
+
+<!-- ================= AFTER ================= -->
+<section class="bp-after">
+  <h2>The plan and the build are the same job.</h2>
+  <p>Eight departments drawn on one sheet, then delivered by the crew that drew it. Nothing gets handed between a designer, a vendor and a crew chief on the way to site.</p>
+</section>
+
+<!-- ================= EVENTS / CLIENTS ================= -->
+<section class="clients" id="events" style="padding:6vh 24px 8vh">
+  <div class="clients-label reveal">Selected Events</div>
+  <div class="client-wall reveal">
+    <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
+    <span>NFL Draft</span><span>Minnesota State Fair</span><span>Innings &amp; Extra Innings</span>
+    <span>Milwaukee Metal Fest</span><span>Point Break Fest</span>
+  </div>
+</section>
+<section class="clients" id="clients" style="padding:0 24px 18vh">
+  <div class="clients-label reveal">Hired By</div>
+  <div class="client-wall reveal">
+    <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+    <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+    <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+  </div>
+</section>
+
+<section class="contact">
+  <h2 class="reveal">Tell us the date<br><span>and the scope.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer><div class="wrap foot">
+  <div class="mark">SEASAK PRODUCTIONS</div><div class="meta">Event Solutions</div>
+</div></footer>
+
+<div class="mk-badge">Mockup <b>10</b> · Blueprint <a href="index.html">All directions →</a></div>
+
+<script src="_shared.js"></script>
+<script>
+(function(){
+  const COPY={
+    design  :['Layer 01 — Design','Site plans, drawn to scale',
+      'Boundary, sightlines and crowd envelope set before anything else is placed. Every layer that follows is drawn onto this sheet.'],
+    staging :['Layer 02 — Staging','Main stage, sub-stages, risers, roof',
+      'Structures positioned against sightlines and the crowd envelope, with riser positions and roof loading resolved on paper first.'],
+    power   :['Layer 03 — Power','Generators, distro and feeder runs',
+      'Generator placement, distro and shore tie-in, with feeder routes drawn to reach both sub-stages without crossing the crowd envelope.'],
+    trucking:['Layer 04 — Trucking','Gate, marshalling yard and route',
+      'Gate, yard and dock sequenced so trailers arrive in build order. The route is drawn around the crowd envelope, not through it.'],
+    labor   :['Layer 05 — Labor','Crew calls, forklifts, stewards',
+      'Call positions and check-in placed against the build schedule, so crew size and location are known before the call is booked.'],
+    ops     :['Layer 06 — Operations','FOH, comms positions, production office',
+      'Front of house, production office and comms positions tied together, so every department can be reached from a known point.'],
+    hosp    :['Layer 07 — Hospitality','Green rooms, dressing, catering',
+      'Backstage compound laid out with green rooms, dressing and catering, connected to the deck by a controlled route.'],
+    advance :['Layer 08 — Artist Advance','Bus parking and the path to the deck',
+      'Bus parking, artist path and load-in door set against riders, tech packs and day sheets already reconciled in the advance.'],
+    built   :['Built','From the drawing to the site',
+      'The same team that drew the sheet builds it. Every layer above exists on site, in the position it was drawn.']
+  };
+  const ORDER=['design','staging','power','trucking','labor','ops','hosp','advance','built'];
+
+  const stage=document.querySelector('.bp-stage');
+  const groups=[...document.querySelectorAll('.lay')];
+  const rows=[...document.querySelectorAll('.bp-lay')];
+  const real=document.getElementById('bpReal');
+  const count=document.getElementById('bpCount');
+  const K=document.getElementById('bpK'), T=document.getElementById('bpT'), D=document.getElementById('bpD');
+  let cur=null;
+
+  function set(k){
+    if(k===cur) return;
+    cur=k;
+    const built = k==='built';
+
+    // layer isolation — the base sheet stays legible under everything
+    groups.forEach(g=>g.classList.toggle('on', built ? true : g.dataset.k===k));
+    rows.forEach(r=>r.classList.toggle('on', built ? true : r.dataset.k===k));
+    real.classList.toggle('on', built);
+    stage.classList.toggle('built', built);
+
+    const i=ORDER.indexOf(k);
+    count.textContent = built ? '08/08' : String(i+1).padStart(2,'0')+'/08';
+
+    [K,T,D].forEach(el=>el.style.opacity=0);
+    setTimeout(()=>{
+      const c=COPY[k];
+      K.textContent=c[0]; T.textContent=c[1]; D.textContent=c[2];
+      [K,T,D].forEach(el=>el.style.opacity=1);
+    },300);
+  }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) set(e.target.dataset.k); });
+  },{rootMargin:'-45% 0px -45% 0px'});
+  document.querySelectorAll('.bp-step').forEach(s=>io.observe(s));
+  set('design');
+})();
+</script>
+</body>
+</html>
