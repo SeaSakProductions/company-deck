@@ -8,119 +8,153 @@
 <style>
   /* ============================================================
      10 — BLUEPRINT
-     One site plan holds the whole page. Scrolling isolates one
-     department at a time the way CAD layers do — its geometry
-     draws in, everything else drops back — so all eight are shown
-     on the same drawing rather than listed as words. The last step
-     wipes the drawing into the built event: paper, then real.
+     Scope shown by accumulation, not by a list. One sheet builds
+     up across five phases until it carries a few hundred drawn
+     elements and forty-odd named layers, then the photograph comes
+     up behind the linework: drawn, then built.
      ============================================================ */
   :root{ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
 
   /* ---------- opening ---------- */
-  .bp-open{position:relative;min-height:88vh;display:flex;align-items:center;padding:16vh 24px 8vh;overflow:hidden}
-  .bp-open .gd{position:absolute;inset:0;opacity:.45;
+  .bp-open{position:relative;min-height:90vh;display:flex;align-items:center;padding:16vh 24px 8vh;overflow:hidden}
+  .bp-open .gd{position:absolute;inset:0;opacity:.5;
     background-image:linear-gradient(rgba(127,195,255,.06) 1px,transparent 1px),
                      linear-gradient(90deg,rgba(127,195,255,.06) 1px,transparent 1px);
-    background-size:56px 56px;
-    mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%);
-    -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%)}
+    background-size:52px 52px;
+    mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,#000,transparent 82%);
+    -webkit-mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,#000,transparent 82%)}
   .bp-open .in{position:relative;z-index:3;max-width:var(--maxw);margin:0 auto;width:100%}
   .bp-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.4em;text-transform:uppercase;
     color:var(--accent);font-weight:600;margin-bottom:24px}
-  .bp-h1{font-size:clamp(27px,4.4vw,54px);font-weight:700;letter-spacing:-.028em;line-height:1.08;max-width:19ch;
+  .bp-h1{font-size:clamp(27px,4.4vw,54px);font-weight:700;letter-spacing:-.028em;line-height:1.08;max-width:18ch;
     background:linear-gradient(180deg,#fff,#a3accb);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .bp-lede{margin-top:24px;max-width:54ch;font-size:clamp(14px,1.6vw,17px);color:#a8b0bc;line-height:1.76}
+  .bp-lede{margin-top:24px;max-width:56ch;font-size:clamp(14px,1.6vw,17px);color:#a8b0bc;line-height:1.76}
 
-  /* ---------- the scroll stage ---------- */
+  /* ---------- scroll stage ---------- */
   .bp-stage{position:relative}
   .bp-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
-  .bp-grid{position:absolute;inset:0;opacity:.4;
-    background-image:linear-gradient(rgba(127,195,255,.055) 1px,transparent 1px),
-                     linear-gradient(90deg,rgba(127,195,255,.055) 1px,transparent 1px);
-    background-size:44px 44px}
+  .bp-grid{position:absolute;inset:0;opacity:.34;
+    background-image:linear-gradient(rgba(127,195,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(127,195,255,.05) 1px,transparent 1px);
+    background-size:40px 40px}
+  .bp-inner{position:relative;z-index:4;width:100%;max-width:1360px;margin:0 auto;padding:0 28px;
+    display:grid;grid-template-columns:216px 1fr;gap:32px;align-items:center}
 
-  .bp-inner{position:relative;z-index:4;width:100%;max-width:1280px;margin:0 auto;padding:0 30px;
-    display:grid;grid-template-columns:224px 1fr;gap:38px;align-items:center}
-
-  /* ---------- layer panel ---------- */
-  .bp-panel{border:1px solid var(--line);background:rgba(7,10,15,.72);backdrop-filter:blur(4px)}
-  .bp-panel .hd{padding:13px 15px;border-bottom:1px solid var(--line);font-family:var(--mono);
-    font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:700;
-    display:flex;justify-content:space-between}
+  /* ---------- layer manager ---------- */
+  .bp-panel{border:1px solid var(--line);background:rgba(7,10,15,.78);backdrop-filter:blur(4px);
+    font-family:var(--mono)}
+  .bp-panel .hd{padding:12px 14px;border-bottom:1px solid var(--line);font-size:9px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--faint);font-weight:700;display:flex;justify-content:space-between}
   .bp-panel .hd em{font-style:normal;color:var(--accent)}
-  .bp-lay{display:flex;align-items:center;gap:10px;padding:10px 15px;border-bottom:1px solid rgba(255,255,255,.045);
-    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--faint);font-weight:600;transition:color .35s,background .35s}
-  .bp-lay:last-child{border-bottom:0}
-  .bp-lay .sw{width:8px;height:8px;flex:none;border:1px solid rgba(255,255,255,.22);transform:rotate(45deg);
-    transition:background .35s,border-color .35s,box-shadow .35s}
-  .bp-lay .no{margin-left:auto;font-size:9px;color:rgba(255,255,255,.14)}
-  .bp-lay.on{color:#fff;background:rgba(127,195,255,.07)}
-  .bp-lay.on .sw{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px 2px rgba(127,195,255,.55)}
-  .bp-lay.on .no{color:var(--accent)}
+  .bp-list{max-height:46vh;overflow:hidden;position:relative}
+  .bp-list::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44px;pointer-events:none;
+    background:linear-gradient(to top,rgba(7,10,15,.95),transparent)}
+  .bp-scroll{transition:transform .7s cubic-bezier(.3,.7,.3,1)}
+  .bp-ph{padding:9px 14px 5px;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,255,255,.22);font-weight:700;border-top:1px solid rgba(255,255,255,.05)}
+  .bp-ph.on{color:var(--accent)}
+  .bp-row{display:flex;align-items:center;gap:8px;padding:4px 14px;font-size:9px;letter-spacing:.1em;
+    color:rgba(255,255,255,.16);font-weight:600;transition:color .4s,background .4s}
+  .bp-row .sw{width:6px;height:6px;flex:none;border:1px solid rgba(255,255,255,.14);transform:rotate(45deg);
+    transition:background .4s,border-color .4s,box-shadow .4s}
+  .bp-row.on{color:#e6edf5;background:rgba(127,195,255,.06)}
+  .bp-row.on .sw{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px 1px rgba(127,195,255,.5)}
+  .bp-count{padding:11px 14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+    font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .bp-count b{color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
 
   /* ---------- drawing ---------- */
-  .bp-draw{position:relative}
-  .bp-draw svg{width:100%;height:auto;display:block;overflow:visible}
+  .bp-draw{min-width:0}
+  /* the canvas carries the sheet's aspect ratio so the photo reveal lines up
+     with the drawing instead of the grid cell */
+  .bp-canvas{position:relative;width:min(100%,calc(58vh * 1.6216));aspect-ratio:1200/740;margin:0 auto}
+  .bp-canvas svg{position:absolute;inset:0;z-index:2;width:100%;height:100%;display:block;overflow:visible}
 
-  .lay{opacity:.13;transition:opacity .65s ease}
-  .lay.on{opacity:1}
-  .lay .ln{fill:none;stroke:rgba(127,195,255,.62);stroke-width:1.25;
-    stroke-dasharray:100;stroke-dashoffset:0;vector-effect:non-scaling-stroke}
-  .lay.on .ln{stroke:rgba(224,238,255,.95);animation:bpDraw 1.05s ease forwards}
-  .lay.on .ln.warm{stroke:rgba(255,176,110,.95)}
+  /* construction lines lay in first, then the real geometry over them */
+  .ph{opacity:0;transition:opacity .5s ease}
+  .ph.seen{opacity:.34}
+  .ph.on{opacity:1}
+  .ln{fill:none;stroke:rgba(150,205,255,.55);stroke-width:1.1;stroke-dasharray:100;stroke-dashoffset:0;
+    vector-effect:non-scaling-stroke}
+  .ph.on .ln{stroke:rgba(226,240,255,.92);
+    animation:bpDraw .75s ease forwards;animation-delay:calc(var(--i,0)*.028s)}
+  .ph.on .ln.warm{stroke:rgba(255,180,116,.95)}
+  .ph.on .ln.faint{stroke:rgba(150,205,255,.45)}
   @keyframes bpDraw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
-  .lay .fz{fill:rgba(127,195,255,.06);stroke:none}
-  .lay.on .fz{fill:rgba(127,195,255,.12)}
-  .lay .hz{fill:url(#bpHatch);stroke:none}
-  .lay .dot{fill:rgba(224,238,255,.9)}
-  .lay .dot.warm{fill:var(--warm)}
-  .lay .lb{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.4px;letter-spacing:.13em;
-    fill:rgba(226,238,250,.9);text-transform:uppercase;opacity:0;transition:opacity .5s ease .25s}
-  .lay.on .lb{opacity:1}
-  .lay .lb.warm{fill:rgba(255,186,130,.95)}
-  /* the base sheet never fully drops away — it is the paper */
-  .lay.base{opacity:.3}
-  .lay.base.on{opacity:1}
+  .ln.cons{stroke:rgba(127,195,255,.30);stroke-width:.8;stroke-dasharray:3 4}
+  .ph.on .ln.cons{stroke:rgba(127,195,255,.34);animation:none}
+  .fz{fill:rgba(127,195,255,.05);stroke:none}
+  .ph.on .fz{fill:rgba(127,195,255,.11)}
+  .hz{fill:url(#bpHatch);stroke:none}
+  .dot{fill:rgba(226,240,255,.9);opacity:0}
+  .ph.on .dot{animation:bpPop .3s ease forwards;animation-delay:calc(var(--i,0)*.028s + .3s)}
+  .ph.seen .dot{opacity:1}
+  .dot.warm{fill:var(--warm)}
+  @keyframes bpPop{from{opacity:0}to{opacity:1}}
+  .lb{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.6px;letter-spacing:.11em;
+    fill:rgba(226,238,250,.9);text-transform:uppercase;opacity:0;transition:opacity .4s ease .3s}
+  .ph.on .lb{opacity:1}
+  .lb.warm{fill:rgba(255,190,140,.95)}
+  .lb.dim{fill:rgba(150,163,180,.85)}
+  /* the sheet itself never drops out — it is the paper */
+  .ph.sheet{opacity:.66}
+  .ph.sheet.on,.ph.sheet.seen{opacity:1}
+  .ph.sheet .lb{opacity:1}
 
-  /* ---------- the built reveal ---------- */
-  .bp-canvas{position:relative}
-  .bp-canvas svg{position:relative;z-index:2;max-height:58vh}
+  /* crosshair tracks where the drafting is happening */
+  .bp-cross{opacity:0;transition:opacity .5s}
+  .bp-cross.on{opacity:.85}
+  .bp-cross line{stroke:rgba(127,195,255,.55);stroke-width:.8;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+  .bp-cross circle{fill:none;stroke:var(--accent);stroke-width:1;vector-effect:non-scaling-stroke}
+
+  /* ---------- built reveal ---------- */
   .bp-real{position:absolute;inset:0;z-index:1;clip-path:inset(0 100% 0 0);
-    transition:clip-path 1.5s cubic-bezier(.65,.02,.28,1)}
+    transition:clip-path 1.6s cubic-bezier(.65,.02,.28,1)}
   .bp-real.on{clip-path:inset(0 0 0 0)}
   .bp-real .slot__ph{position:absolute;inset:0}
+  /* the reveal has to read as a photograph, not a tint — the linework above
+     it is already carrying most of the contrast */
+  .bp-real{filter:saturate(1.08)}
+  /* the shared stand-ins are deliberately faint, which is right for a small
+     plate but too weak when the whole page resolves onto this one frame.
+     Replaced wholesale the moment --img is set, same as every other slot. */
+  .bp-real .slot__ph{
+    background:
+      repeating-conic-gradient(from 208deg at 50% -6%,
+        rgba(255,198,124,.10) 0deg 2deg, transparent 2deg 11deg),
+      radial-gradient(ellipse 50% 38% at 50% 22%, rgba(255,150,58,.60), transparent 74%),
+      radial-gradient(ellipse 92% 56% at 50% 92%, rgba(126,64,22,.34), transparent 72%),
+      linear-gradient(180deg,#1d1712 0%,#100c0a 52%,#080606 100%);
+  }
   .bp-real::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(5,6,8,.42),rgba(5,6,8,.12) 45%,rgba(5,6,8,.72))}
-  .bp-stage.built .lay .ln{stroke:rgba(206,228,250,.55)}
-   /* every layer is on at once here, so the callouts collide — drop all but
-     the sheet's own, and let the geometry read against the photograph */
-  .bp-stage.built .lay .lb{opacity:0}
-  .bp-stage.built .lay.base .lb{opacity:1;fill:rgba(226,238,250,.8)}
-  .bp-stage.built .lay .fz{fill:rgba(127,195,255,.05)}
+    background:linear-gradient(180deg,rgba(5,6,8,.20),rgba(5,6,8,.04) 45%,rgba(5,6,8,.58))}
+  .bp-stage.built .ln{stroke:rgba(206,228,250,.5)!important}
+  .bp-stage.built .ln.warm{stroke:rgba(255,180,116,.55)!important}
+  .bp-stage.built .lb{opacity:0}
+  .bp-stage.built .ph.sheet .lb{opacity:.85}
+  .bp-stage.built .bp-cross{opacity:0}
 
   /* ---------- caption ---------- */
-  .bp-cap{margin-top:24px;padding-left:2px}
-  .bp-cap .k{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  .bp-cap{margin-top:22px;padding-left:2px;min-height:118px}
+  .bp-cap .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
     color:var(--accent);font-weight:700}
-  .bp-cap h2{margin-top:12px;font-size:clamp(19px,2.5vw,29px);font-weight:700;letter-spacing:-.018em;line-height:1.16}
-  .bp-cap p{margin-top:11px;max-width:56ch;font-size:14px;color:#a8b0bc;line-height:1.68}
-  .bp-cap .fade{transition:opacity .35s ease}
+  .bp-cap h2{margin-top:11px;font-size:clamp(18px,2.4vw,28px);font-weight:700;letter-spacing:-.018em;line-height:1.16}
+  .bp-cap p{margin-top:10px;max-width:62ch;font-size:13.5px;color:#a8b0bc;line-height:1.66}
+  .bp-cap .fade{transition:opacity .3s ease}
 
-  /* ---------- scroll steps ---------- */
-  .bp-step{height:100vh;pointer-events:none}
-  .bp-step:first-child{height:60vh}
+  .bp-step{height:110vh;pointer-events:none}
+  .bp-step:first-child{height:70vh}
 
-  /* ---------- after ---------- */
-  .bp-after{padding:16vh 24px 12vh;border-top:1px solid var(--line);text-align:center}
-  .bp-after h2{font-size:clamp(22px,3.2vw,38px);font-weight:700;letter-spacing:-.022em;line-height:1.16;max-width:22ch;margin:0 auto}
-  .bp-after p{margin:22px auto 0;max-width:58ch;color:var(--muted);font-size:clamp(14px,1.5vw,16px);line-height:1.76}
+  .bp-after{padding:15vh 24px 12vh;border-top:1px solid var(--line);text-align:center}
+  .bp-after h2{font-size:clamp(21px,3.1vw,36px);font-weight:700;letter-spacing:-.022em;line-height:1.16;max-width:24ch;margin:0 auto}
+  .bp-after p{margin:20px auto 0;max-width:60ch;color:var(--muted);font-size:clamp(14px,1.5vw,16px);line-height:1.76}
 
-  @media(max-width:1000px){
-    .bp-inner{grid-template-columns:1fr;gap:20px}
+  @media(max-width:1040px){
+    .bp-inner{grid-template-columns:1fr;gap:16px}
     .bp-panel{display:none}
-    .bp-cap{position:static;margin-top:26px}
-    .bp-sticky{height:100svh;align-items:flex-start;padding-top:12vh}
+    .bp-sticky{height:100svh;align-items:flex-start;padding-top:11vh}
+    .bp-canvas svg{max-height:46vh}
+    .bp-cap{min-height:150px}
   }
 </style>
 </head>
@@ -140,198 +174,219 @@
     <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
   </a>
   <nav class="site-nav">
-    <a href="#plan">What We Run</a><a href="#events">Events</a><a href="#clients">Clients</a>
+    <a href="#plan">The Sheet</a><a href="#events">Events</a><a href="#clients">Clients</a>
     <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
   </nav>
   <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#plan">What We Run</a><a href="#events">Events</a><a href="#clients">Clients</a>
+  <a href="#plan">The Sheet</a><a href="#events">Events</a><a href="#clients">Clients</a>
   <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
 </div>
 
-<!-- ================= OPENING ================= -->
 <section class="bp-open" id="top">
   <div class="gd" aria-hidden="true"></div>
   <div class="in">
     <div class="bp-eyebrow">Event Solutions</div>
-    <h1 class="bp-h1">Every department, drawn on one plan.</h1>
-    <p class="bp-lede">Staging, power, trucking, labor, design, operations, hospitality and artist advance — planned to scale on the same site plan, then built by the same team. Scroll to take the drawing apart layer by layer.</p>
+    <h1 class="bp-h1">A show is a few hundred decisions, drawn to scale.</h1>
+    <p class="bp-lede">Not a list of services. One sheet, built up in phases — survey, infrastructure, structures, circulation, operations — until every position on site is fixed on paper. Then the same crew goes and builds it.</p>
   </div>
   <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
 </section>
 
-<!-- ================= THE PLAN ================= -->
 <section class="bp-stage" id="plan">
   <div class="bp-sticky">
     <div class="bp-grid" aria-hidden="true"></div>
     <div class="bp-inner">
 
       <aside class="bp-panel" aria-hidden="true">
-        <div class="hd"><span>Layers</span><em id="bpCount">01/08</em></div>
-        <div class="bp-lay" data-k="design"><span class="sw"></span>Design<span class="no">01</span></div>
-        <div class="bp-lay" data-k="staging"><span class="sw"></span>Staging<span class="no">02</span></div>
-        <div class="bp-lay" data-k="power"><span class="sw"></span>Power<span class="no">03</span></div>
-        <div class="bp-lay" data-k="trucking"><span class="sw"></span>Trucking<span class="no">04</span></div>
-        <div class="bp-lay" data-k="labor"><span class="sw"></span>Labor<span class="no">05</span></div>
-        <div class="bp-lay" data-k="ops"><span class="sw"></span>Operations<span class="no">06</span></div>
-        <div class="bp-lay" data-k="hosp"><span class="sw"></span>Hospitality<span class="no">07</span></div>
-        <div class="bp-lay" data-k="advance"><span class="sw"></span>Artist Advance<span class="no">08</span></div>
+        <div class="hd"><span>Layer manager</span><em id="bpPhase">1/5</em></div>
+        <div class="bp-list"><div class="bp-scroll" id="bpScroll"></div></div>
+        <div class="bp-count"><span>Elements</span><b id="bpNum">0</b></div>
       </aside>
 
       <div class="bp-draw">
-        <div class="bp-canvas">
-        <!-- the built photograph, revealed by wipe on the last step, behind the linework -->
+      <div class="bp-canvas">
         <div class="bp-real slot slot--music slot--stage" id="bpReal" aria-hidden="true"><div class="slot__ph"></div></div>
 
-        <svg viewBox="0 0 1000 600" role="img" aria-label="Event site plan">
+        <svg viewBox="0 0 1200 740" role="img" aria-label="Event site plan">
           <defs>
             <pattern id="bpHatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(127,195,255,.16)" stroke-width="1"/>
+              <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(127,195,255,.15)" stroke-width="1"/>
             </pattern>
+            <marker id="bpArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0 0 L6 3 L0 6 z" fill="rgba(150,205,255,.7)"/>
+            </marker>
           </defs>
 
-          <!-- 01 DESIGN — the sheet: boundary, crowd envelope, dimensions -->
-          <g class="lay base" data-k="design">
-            <rect class="ln" pathLength="100" x="34" y="26" width="932" height="548"/>
-            <path class="hz" d="M348 214 L652 214 L742 496 L258 496 Z"/>
-            <path class="ln" pathLength="100" d="M348 214 L652 214 L742 496 L258 496 Z"/>
-            <path class="ln" pathLength="100" d="M34 592 L966 592 M34 585 L34 599 M966 585 L966 599"/>
-            <text class="lb" x="500" y="586" text-anchor="middle">Site boundary · to scale</text>
-            <text class="lb" x="500" y="360" text-anchor="middle">Crowd envelope</text>
-            <text class="lb" x="44" y="44">Sheet 01 · Site plan</text>
+          <!-- ============ SHEET (always present) ============ -->
+          <g class="ph sheet" data-k="sheet">
+            <rect class="ln" style="--i:0" x="26" y="26" width="1148" height="620"/>
+            <path class="ln faint" style="--i:1" d="M26 660 L1174 660 M26 652 L26 668 M1174 652 L1174 668" marker-end="url(#bpArr)"/>
+            <text class="lb dim" x="600" y="654" text-anchor="middle">Site boundary · drawn to scale</text>
+            <!-- title block -->
+            <rect class="ln faint" style="--i:2" x="884" y="676" width="290" height="56"/>
+            <path class="ln faint" style="--i:3" d="M884 700 L1174 700 M978 676 L978 732 M1076 700 L1076 732"/>
+            <text class="lb dim" x="892" y="692">SeaSak Productions · site plan</text>
+            <text class="lb dim" x="892" y="716">Sheet</text><text class="lb" x="892" y="727">SP-01</text>
+            <text class="lb dim" x="986" y="716">Scale</text><text class="lb" x="986" y="727">1:500</text>
+            <text class="lb dim" x="1084" y="716">Rev</text><text class="lb" x="1084" y="727">C</text>
+            <!-- north arrow -->
+            <path class="ln" style="--i:4" d="M1130 52 L1130 92 M1130 52 L1124 64 M1130 52 L1136 64"/>
+            <text class="lb dim" x="1130" y="104" text-anchor="middle">N</text>
+            <!-- scale bar -->
+            <path class="ln faint" style="--i:5" d="M40 700 L160 700 M40 695 L40 705 M100 697 L100 703 M160 695 L160 705"/>
+            <text class="lb dim" x="40" y="716">0</text><text class="lb dim" x="150" y="716">100m</text>
           </g>
 
-          <!-- 02 STAGING -->
-          <g class="lay" data-k="staging">
-            <rect class="fz" x="380" y="118" width="240" height="84"/>
-            <rect class="ln" pathLength="100" x="380" y="118" width="240" height="84"/>
-            <path class="ln" pathLength="100" d="M380 118 L500 74 L620 118"/>
-            <text class="lb" x="500" y="150" text-anchor="middle">Main stage</text>
-            <text class="lb" x="500" y="166" text-anchor="middle">Roof · PA wings</text>
-            <rect class="ln" pathLength="100" x="66" y="250" width="118" height="62"/>
-            <text class="lb" x="125" y="285" text-anchor="middle">Sub stage A</text>
-            <rect class="ln" pathLength="100" x="816" y="250" width="118" height="62"/>
-            <text class="lb" x="875" y="285" text-anchor="middle">Sub stage B</text>
-            <rect class="ln" pathLength="100" x="300" y="206" width="60" height="26"/>
-            <text class="lb" x="330" y="222" text-anchor="middle">Riser</text>
-            <rect class="ln" pathLength="100" x="640" y="206" width="60" height="26"/>
-            <text class="lb" x="670" y="222" text-anchor="middle">Riser</text>
+          <!-- ============ 1 SURVEY ============ -->
+          <g class="ph" data-k="survey">
+            <path class="ln cons" d="M600 40 L600 632 M40 336 L1160 336"/>
+            <path class="ln" style="--i:1" d="M54 54 L74 54 M64 44 L64 64"/><text class="lb dim" x="80" y="58">BM-01</text>
+            <path class="ln" style="--i:2" d="M1106 604 L1126 604 M1116 594 L1116 614"/><text class="lb dim" x="1040" y="608">BM-02</text>
+            <path class="ln" style="--i:3" d="M54 604 L74 604 M64 594 L64 614"/><text class="lb dim" x="80" y="608">BM-03</text>
+            <path class="ln faint" style="--i:4" d="M26 596 Q400 578 700 590 T1174 574"/>
+            <text class="lb dim" x="120" y="590">Existing grade</text>
+            <path class="ln faint" style="--i:5" d="M26 120 Q380 108 720 118 T1174 106"/>
+            <path class="ln faint" style="--i:6" d="M26 686 L1174 686"/>
+            <text class="lb dim" x="600" y="682" text-anchor="middle">Public highway</text>
+            <path class="ln faint" style="--i:7" d="M300 40 L300 632 M900 40 L900 632" stroke-dasharray="2 6"/>
+            <text class="lb dim" x="306" y="52">GRID B</text><text class="lb dim" x="906" y="52">GRID D</text>
           </g>
 
-          <!-- 03 POWER -->
-          <g class="lay" data-k="power">
-            <rect class="ln" pathLength="100" x="706" y="118" width="58" height="38"/>
-            <text class="lb" x="735" y="141" text-anchor="middle">Gen</text>
-            <path class="ln" pathLength="100" d="M706 137 L620 137"/>
-            <circle class="dot" cx="620" cy="137" r="3.2"/>
-            <text class="lb" x="770" y="141">Distro · shore tie-in</text>
-            <path class="ln" pathLength="100" d="M735 156 L735 281 L934 281"/>
-            <circle class="dot" cx="934" cy="281" r="3.2"/>
-            <path class="ln" pathLength="100" d="M706 137 L250 137 L250 281 L184 281"/>
-            <circle class="dot" cx="184" cy="281" r="3.2"/>
-            <text class="lb" x="258" y="130">Feeder run</text>
+          <!-- ============ 2 INFRASTRUCTURE ============ -->
+          <g class="ph" data-k="infra">
+            <rect class="ln" style="--i:1" x="770" y="86" width="66" height="40"/><text class="lb" x="803" y="110" text-anchor="middle">GEN A</text>
+            <rect class="ln" style="--i:2" x="844" y="86" width="66" height="40"/><text class="lb" x="877" y="110" text-anchor="middle">GEN B</text>
+            <rect class="ln" style="--i:3" x="918" y="86" width="54" height="40"/><text class="lb" x="945" y="110" text-anchor="middle">FUEL</text>
+            <path class="ln" style="--i:4" d="M770 106 L700 106 L700 172"/><circle class="dot" style="--i:4" cx="700" cy="172" r="3"/>
+            <text class="lb" x="640" y="102">Feeder · stage</text>
+            <path class="ln" style="--i:5" d="M844 126 L844 300 L1064 300"/><circle class="dot" style="--i:5" cx="1064" cy="300" r="3"/>
+            <path class="ln" style="--i:6" d="M770 116 L250 116 L250 300 L166 300"/><circle class="dot" style="--i:6" cx="166" cy="300" r="3"/>
+            <text class="lb" x="262" y="112">Feeder · sub stages</text>
+            <path class="ln" style="--i:7" d="M877 126 L877 470 L640 470"/><circle class="dot" style="--i:7" cx="640" cy="470" r="3"/>
+            <text class="lb" x="884" y="400">Feeder · FOH</text>
+            <rect class="ln" style="--i:8" x="676" y="164" width="20" height="16"/><text class="lb" x="654" y="160">DB-1</text>
+            <rect class="ln" style="--i:9" x="1054" y="292" width="20" height="16"/><text class="lb" x="1030" y="288">DB-2</text>
+            <rect class="ln" style="--i:10" x="156" y="292" width="20" height="16"/><text class="lb" x="132" y="288">DB-3</text>
+            <path class="ln" style="--i:11" d="M300 116 L300 124 M310 116 L310 124 M320 116 L320 124 M330 116 L330 124"/>
+            <text class="lb" x="300" y="138">Cable ramp</text>
+            <path class="ln" style="--i:12" d="M26 240 L120 240"/><text class="lb" x="34" y="234">Water main</text>
+            <path class="ln" style="--i:13" d="M1080 380 L1092 356 L1104 380 Z M1092 380 L1092 400"/>
+            <text class="lb" x="1058" y="414">Comms tower</text>
           </g>
 
-          <!-- 04 TRUCKING -->
-          <g class="lay" data-k="trucking">
-            <rect class="ln warm" pathLength="100" x="58" y="452" width="150" height="96"/>
-            <text class="lb warm" x="133" y="504" text-anchor="middle">Marshalling yard</text>
-            <path class="ln warm" pathLength="100" d="M34 540 L58 540"/>
-            <circle class="dot warm" cx="34" cy="540" r="4"/>
-            <text class="lb warm" x="44" y="564">Gate</text>
-            <path class="ln warm" pathLength="100" d="M208 476 Q286 476 300 380 T322 130 L332 108"/>
-            <text class="lb warm" x="238" y="452">Truck route</text>
-            <rect class="ln warm" pathLength="100" x="330" y="34" width="86" height="34"/>
-            <text class="lb warm" x="373" y="55" text-anchor="middle">Dock</text>
+          <!-- ============ 3 STRUCTURES ============ -->
+          <g class="ph" data-k="struct">
+            <rect class="fz" x="470" y="172" width="260" height="88"/>
+            <rect class="ln" style="--i:1" x="470" y="172" width="260" height="88"/>
+            <path class="ln" style="--i:2" d="M470 172 L600 128 L730 172"/>
+            <text class="lb" x="600" y="206" text-anchor="middle">MAIN STAGE</text>
+            <text class="lb dim" x="600" y="220" text-anchor="middle">Roof · 20m span</text>
+            <rect class="ln" style="--i:3" x="430" y="182" width="34" height="62"/><text class="lb" x="410" y="176">PA L</text>
+            <rect class="ln" style="--i:4" x="736" y="182" width="34" height="62"/><text class="lb" x="742" y="176">PA R</text>
+            <rect class="ln" style="--i:5" x="392" y="262" width="60" height="24"/><text class="lb" x="422" y="278" text-anchor="middle">RISER</text>
+            <rect class="ln" style="--i:6" x="748" y="262" width="60" height="24"/><text class="lb" x="778" y="278" text-anchor="middle">RISER</text>
+            <rect class="ln" style="--i:7" x="66" y="272" width="120" height="64"/><text class="lb" x="126" y="308" text-anchor="middle">SUB STAGE A</text>
+            <rect class="ln" style="--i:8" x="1014" y="272" width="120" height="64"/><text class="lb" x="1074" y="308" text-anchor="middle">SUB STAGE B</text>
+            <rect class="ln" style="--i:9" x="330" y="392" width="30" height="30"/><text class="lb" x="300" y="436">DELAY L</text>
+            <rect class="ln" style="--i:10" x="840" y="392" width="30" height="30"/><text class="lb" x="838" y="436">DELAY R</text>
+            <rect class="fz" x="562" y="462" width="76" height="48"/>
+            <rect class="ln" style="--i:11" x="562" y="462" width="76" height="48"/><text class="lb" x="600" y="490" text-anchor="middle">F.O.H.</text>
+            <rect class="ln" style="--i:12" x="470" y="466" width="36" height="28"/><text class="lb" x="452" y="460">CAM 2</text>
+            <rect class="ln" style="--i:13" x="694" y="466" width="36" height="28"/><text class="lb" x="700" y="460">CAM 3</text>
+            <rect class="ln" style="--i:14" x="206" y="420" width="86" height="52"/><text class="lb" x="249" y="450" text-anchor="middle">ADA PLATFORM</text>
+            <path class="ln" style="--i:15" d="M424 270 Q600 296 776 270"/><text class="lb" x="600" y="308" text-anchor="middle">FRONT BARRICADE</text>
           </g>
 
-          <!-- 05 LABOR -->
-          <g class="lay" data-k="labor">
-            <path class="ln" pathLength="100" d="M494 108 L506 108 M500 102 L500 114"/>
-            <path class="ln" pathLength="100" d="M119 244 L131 244 M125 238 L125 250"/>
-            <path class="ln" pathLength="100" d="M869 244 L881 244 M875 238 L875 250"/>
-            <path class="ln" pathLength="100" d="M127 446 L139 446 M133 440 L133 452"/>
-            <path class="ln" pathLength="100" d="M367 72 L379 72 M373 66 L373 78"/>
-            <text class="lb" x="500" y="96" text-anchor="middle">Deck call</text>
-            <text class="lb" x="125" y="232" text-anchor="middle">Call A</text>
-            <text class="lb" x="875" y="232" text-anchor="middle">Call B</text>
-            <text class="lb" x="133" y="434" text-anchor="middle">Forklift ops</text>
-            <text class="lb" x="373" y="60" text-anchor="middle">Steward</text>
-            <rect class="ln" pathLength="100" x="424" y="34" width="86" height="34"/>
-            <text class="lb" x="467" y="55" text-anchor="middle">Crew check-in</text>
+          <!-- ============ 4 CIRCULATION ============ -->
+          <g class="ph" data-k="circ">
+            <rect class="ln faint" style="--i:1" x="48" y="48" width="1104" height="576" stroke-dasharray="6 5"/>
+            <text class="lb" x="56" y="44">PERIMETER FENCE</text>
+            <path class="hz" d="M436 290 L764 290 L892 574 L308 574 Z"/>
+            <path class="ln faint" style="--i:2" d="M436 290 L764 290 L892 574 L308 574 Z"/>
+            <text class="lb dim" x="600" y="400" text-anchor="middle">GENERAL ADMISSION</text>
+            <rect class="ln warm" style="--i:3" x="62" y="500" width="150" height="100"/>
+            <text class="lb warm" x="137" y="554" text-anchor="middle">MARSHALLING</text>
+            <path class="ln warm" style="--i:4" d="M26 592 L62 592"/><circle class="dot warm" style="--i:4" cx="26" cy="592" r="4"/>
+            <text class="lb warm" x="34" y="614">TRUCK GATE</text>
+            <path class="ln warm" style="--i:5" d="M212 528 Q290 528 300 430 T318 172 L330 140"/>
+            <text class="lb warm" x="238" y="500">TRUCK ROUTE</text>
+            <rect class="ln warm" style="--i:6" x="326" y="46" width="88" height="34"/><text class="lb warm" x="370" y="68" text-anchor="middle">DOCK</text>
+            <path class="ln faint" style="--i:7" d="M980 624 L980 600 M1010 624 L1010 600 M1040 624 L1040 600 M1070 624 L1070 600"/>
+            <rect class="ln" style="--i:8" x="966" y="556" width="118" height="40"/>
+            <text class="lb" x="1025" y="580" text-anchor="middle">BOX OFFICE</text>
+            <text class="lb" x="966" y="640">ENTRY LANES 1–4</text>
+            <path class="ln faint" style="--i:9" d="M308 574 L120 624" marker-end="url(#bpArr)"/>
+            <path class="ln faint" style="--i:10" d="M892 574 L1080 624" marker-end="url(#bpArr)"/>
+            <text class="lb" x="150" y="600">EGRESS</text><text class="lb" x="1010" y="600">EGRESS</text>
+            <path class="ln faint" style="--i:11" d="M212 470 L330 470" stroke-dasharray="4 4" marker-end="url(#bpArr)"/>
+            <text class="lb dim" x="220" y="464">FORKLIFT RUN</text>
+            <rect class="ln warm" style="--i:12" x="960" y="130" width="126" height="44"/>
+            <text class="lb warm" x="1023" y="156" text-anchor="middle">BUS PARKING</text>
+            <path class="ln warm" style="--i:13" d="M960 152 Q820 152 760 176 T700 200"/>
+            <text class="lb warm" x="790" y="196">ARTIST PATH</text>
           </g>
 
-          <!-- 06 OPERATIONS -->
-          <g class="lay" data-k="ops">
-            <rect class="fz" x="466" y="418" width="68" height="42"/>
-            <rect class="ln" pathLength="100" x="466" y="418" width="68" height="42"/>
-            <text class="lb" x="500" y="444" text-anchor="middle">F.O.H.</text>
-            <rect class="ln" pathLength="100" x="518" y="34" width="94" height="34"/>
-            <text class="lb" x="565" y="55" text-anchor="middle">Production office</text>
-            <path class="ln" pathLength="100" d="M500 418 L500 240"/>
-            <path class="ln" pathLength="100" d="M534 439 L735 439 L735 300"/>
-            <path class="ln" pathLength="100" d="M466 439 L265 439 L265 300"/>
-            <circle class="dot" cx="500" cy="240" r="3"/>
-            <circle class="dot" cx="735" cy="300" r="3"/>
-            <circle class="dot" cx="265" cy="300" r="3"/>
-            <text class="lb" x="546" y="410">Comms positions</text>
+          <!-- ============ 5 OPERATIONS ============ -->
+          <g class="ph" data-k="ops">
+            <rect class="ln" style="--i:1" x="426" y="46" width="96" height="34"/><text class="lb" x="474" y="68" text-anchor="middle">PROD OFFICE</text>
+            <rect class="ln" style="--i:2" x="530" y="46" width="80" height="34"/><text class="lb" x="570" y="68" text-anchor="middle">GREEN RM</text>
+            <rect class="ln" style="--i:3" x="618" y="46" width="80" height="34"/><text class="lb" x="658" y="68" text-anchor="middle">DRESSING</text>
+            <rect class="ln" style="--i:4" x="706" y="46" width="96" height="34"/><text class="lb" x="754" y="68" text-anchor="middle">CATERING</text>
+            <path class="ln faint" style="--i:5" d="M426 80 L426 100 L810 100 L810 80"/>
+            <text class="lb dim" x="600" y="114" text-anchor="middle">BACKSTAGE COMPOUND</text>
+            <rect class="ln" style="--i:6" x="66" y="380" width="76" height="40"/>
+            <path class="ln" style="--i:7" d="M96 392 L112 392 M104 384 L104 400"/><text class="lb" x="66" y="374">MEDICAL</text>
+            <rect class="ln" style="--i:8" x="1058" y="380" width="76" height="40"/><text class="lb" x="1058" y="374">WELFARE</text>
+            <rect class="ln faint" style="--i:9" x="200" y="600" width="40" height="24"/>
+            <rect class="ln faint" style="--i:10" x="248" y="600" width="40" height="24"/>
+            <rect class="ln faint" style="--i:11" x="296" y="600" width="40" height="24"/>
+            <text class="lb" x="200" y="640">CONCESSIONS</text>
+            <rect class="ln faint" style="--i:12" x="880" y="440" width="52" height="28"/>
+            <rect class="ln faint" style="--i:13" x="880" y="474" width="52" height="28"/>
+            <text class="lb" x="940" y="462">RESTROOMS</text>
+            <rect class="ln faint" style="--i:14" x="66" y="140" width="60" height="34"/><text class="lb" x="66" y="134">WASTE</text>
+            <circle class="ln" style="--i:15" cx="308" cy="574" r="8"/><text class="lb" x="284" y="596">SEC 1</text>
+            <circle class="ln" style="--i:16" cx="892" cy="574" r="8"/><text class="lb" x="900" y="596">SEC 2</text>
+            <circle class="ln" style="--i:17" cx="600" cy="290" r="8"/><text class="lb" x="614" y="288">SEC 3</text>
+            <circle class="ln" style="--i:18" cx="1025" cy="596" r="8"/><text class="lb" x="1044" y="614">SEC 4</text>
+            <path class="ln faint" style="--i:19" d="M600 462 L600 300 M638 486 L877 486 M562 486 L330 486"/>
+            <text class="lb dim" x="646" y="458">COMMS RUNS</text>
           </g>
 
-          <!-- 07 HOSPITALITY -->
-          <g class="lay" data-k="hosp">
-            <rect class="ln" pathLength="100" x="620" y="34" width="80" height="34"/>
-            <text class="lb" x="660" y="55" text-anchor="middle">Green room</text>
-            <rect class="ln" pathLength="100" x="708" y="34" width="80" height="34"/>
-            <text class="lb" x="748" y="55" text-anchor="middle">Dressing</text>
-            <rect class="ln" pathLength="100" x="796" y="34" width="96" height="34"/>
-            <text class="lb" x="844" y="55" text-anchor="middle">Catering</text>
-            <path class="ln" pathLength="100" d="M660 68 L660 92 L560 92"/>
-            <text class="lb" x="568" y="106">Backstage compound</text>
-          </g>
-
-          <!-- 08 ARTIST ADVANCE -->
-          <g class="lay" data-k="advance">
-            <rect class="ln warm" pathLength="100" x="796" y="92" width="140" height="46"/>
-            <text class="lb warm" x="866" y="120" text-anchor="middle">Bus parking</text>
-            <path class="ln warm" pathLength="100" d="M796 115 Q680 115 640 108 T560 100 L560 118"/>
-            <circle class="dot warm" cx="560" cy="118" r="3.6"/>
-            <text class="lb warm" x="612" y="136">Artist path to deck</text>
-            <text class="lb warm" x="806" y="156">Riders · tech packs · day sheets</text>
+          <g class="bp-cross" id="bpCross">
+            <line id="cx" x1="0" y1="0" x2="1200" y2="0"/>
+            <line id="cy" x1="0" y1="0" x2="0" y2="740"/>
+            <circle id="cc" cx="0" cy="0" r="11"/>
           </g>
         </svg>
-        </div>
+      </div>
 
         <div class="bp-cap">
-          <div class="k fade" id="bpK">Layer 01 — Design</div>
-          <h2 class="fade" id="bpT">Site plans, drawn to scale</h2>
-          <p class="fade" id="bpD">Boundary, sightlines and crowd envelope set before anything else is placed. Every layer that follows is drawn onto this sheet.</p>
+          <div class="k fade" id="bpK">Phase 1 of 5 — Survey</div>
+          <h2 class="fade" id="bpT">The sheet before anything is placed</h2>
+          <p class="fade" id="bpD">Boundary, grid lines, benchmarks and existing grade. Everything that follows is measured off this, which is why the drawing starts here and not with a stage.</p>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- one viewport per layer, plus the built step -->
-  <div class="bp-step" data-k="design"></div>
-  <div class="bp-step" data-k="staging"></div>
-  <div class="bp-step" data-k="power"></div>
-  <div class="bp-step" data-k="trucking"></div>
-  <div class="bp-step" data-k="labor"></div>
+  <div class="bp-step" data-k="survey"></div>
+  <div class="bp-step" data-k="infra"></div>
+  <div class="bp-step" data-k="struct"></div>
+  <div class="bp-step" data-k="circ"></div>
   <div class="bp-step" data-k="ops"></div>
-  <div class="bp-step" data-k="hosp"></div>
-  <div class="bp-step" data-k="advance"></div>
   <div class="bp-step" data-k="built"></div>
 </section>
 
-<!-- ================= AFTER ================= -->
 <section class="bp-after">
-  <h2>The plan and the build are the same job.</h2>
-  <p>Eight departments drawn on one sheet, then delivered by the crew that drew it. Nothing gets handed between a designer, a vendor and a crew chief on the way to site.</p>
+  <h2>The sheet is the scope.</h2>
+  <p>Nothing on it was handed between a designer, a vendor and a crew chief on the way to site. The people who drew it are the people who build it, which is why what arrives matches what was agreed.</p>
 </section>
 
-<!-- ================= EVENTS / CLIENTS ================= -->
-<section class="clients" id="events" style="padding:6vh 24px 8vh">
+<section class="clients" id="events" style="padding:4vh 24px 8vh">
   <div class="clients-label reveal">Selected Events</div>
   <div class="client-wall reveal">
     <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
@@ -362,63 +417,139 @@
 <script src="_shared.js"></script>
 <script>
 (function(){
-  const COPY={
-    design  :['Layer 01 — Design','Site plans, drawn to scale',
-      'Boundary, sightlines and crowd envelope set before anything else is placed. Every layer that follows is drawn onto this sheet.'],
-    staging :['Layer 02 — Staging','Main stage, sub-stages, risers, roof',
-      'Structures positioned against sightlines and the crowd envelope, with riser positions and roof loading resolved on paper first.'],
-    power   :['Layer 03 — Power','Generators, distro and feeder runs',
-      'Generator placement, distro and shore tie-in, with feeder routes drawn to reach both sub-stages without crossing the crowd envelope.'],
-    trucking:['Layer 04 — Trucking','Gate, marshalling yard and route',
-      'Gate, yard and dock sequenced so trailers arrive in build order. The route is drawn around the crowd envelope, not through it.'],
-    labor   :['Layer 05 — Labor','Crew calls, forklifts, stewards',
-      'Call positions and check-in placed against the build schedule, so crew size and location are known before the call is booked.'],
-    ops     :['Layer 06 — Operations','FOH, comms positions, production office',
-      'Front of house, production office and comms positions tied together, so every department can be reached from a known point.'],
-    hosp    :['Layer 07 — Hospitality','Green rooms, dressing, catering',
-      'Backstage compound laid out with green rooms, dressing and catering, connected to the deck by a controlled route.'],
-    advance :['Layer 08 — Artist Advance','Bus parking and the path to the deck',
-      'Bus parking, artist path and load-in door set against riders, tech packs and day sheets already reconciled in the advance.'],
-    built   :['Built','From the drawing to the site',
-      'The same team that drew the sheet builds it. Every layer above exists on site, in the position it was drawn.']
-  };
-  const ORDER=['design','staging','power','trucking','labor','ops','hosp','advance','built'];
+  /* Phases, not departments. Each one lands a batch of layers, so the sheet
+     accumulates rather than cycling through a fixed list of services. */
+  const PHASES=[
+    {k:'survey',n:'Survey',at:[600,336],
+     layers:['SITE-BNDY','GRID-A..E','BENCHMARK','CONTOUR','EXIST-GRADE','HIGHWAY','TITLE-BLK','DIM-STRING','NORTH','SCALE-BAR'],
+     t:'The sheet before anything is placed',
+     d:'Boundary, grid lines, benchmarks and existing grade. Everything that follows is measured off this, which is why the drawing starts here and not with a stage.'},
+    {k:'infra',n:'Infrastructure',at:[840,120],
+     layers:['GEN-A','GEN-B','FUEL-BUND','FEEDER-STG','FEEDER-SUB','FEEDER-FOH','DIST-BOX','CABLE-RAMP','WATER-MAIN','COMMS-TWR','EARTH-PIT','SPILL-KIT'],
+     t:'Power, water, fuel and comms',
+     d:'Generator positions, distro boxes and feeder runs drawn so no cable crosses a public route. Water, fuel bunding and the comms tower go in at the same time, because they compete for the same ground.'},
+    {k:'struct',n:'Structures',at:[600,220],
+     layers:['STAGE-MAIN','ROOF-20M','PA-WING-L','PA-WING-R','RISER-L','RISER-R','SUB-STG-A','SUB-STG-B','DELAY-L','DELAY-R','FOH-DECK','CAM-2','CAM-3','ADA-PLAT','BARRICADE','SIGHTLINE'],
+     t:'Stages, towers, platforms and barricade',
+     d:'Every structure positioned against sightlines and the front barricade — main stage and roof, PA wings, risers, two sub-stages, delay towers, camera platforms, FOH and the ADA platform.'},
+    {k:'circ',n:'Circulation',at:[300,520],
+     layers:['FENCE-PERIM','GA-ENVELOPE','TRUCK-GATE','TRUCK-ROUTE','MARSHALLING','DOCK','FORKLIFT-RUN','ENTRY-LANE','BOX-OFFICE','EGRESS-W','EGRESS-E','BUS-PARK','ARTIST-PATH','PIT-ACCESS'],
+     t:'Fence line, gates, routes and egress',
+     d:'How everything moves. Truck route and marshalling drawn clear of the crowd envelope, entry lanes and box office sized to the gate, and egress widths set before the fence line is fixed.'},
+    {k:'ops',n:'Operations',at:[600,90],
+     layers:['PROD-OFFICE','GREEN-RM','DRESSING','CATERING','COMPOUND','MEDICAL','WELFARE','CONCESSION','RESTROOM','WASTE','SEC-POST-1','SEC-POST-2','SEC-POST-3','SEC-POST-4','COMMS-RUN','LOST-CHILD'],
+     t:'Compound, guest services and posts',
+     d:'The parts nobody photographs. Backstage compound, medical, welfare, concessions, restrooms, waste and the security posts — each with a position, a route to it and a person responsible.'},
+    {k:'built',n:'Built',at:[600,340],layers:[],
+     t:'From the sheet to the site',
+     d:'Every line above exists on site, in the position it was drawn. The drawing and the build are the same job, done by the same people.'}
+  ];
+
+  // every drawable is normalised to pathLength 100 so a single dash animation
+  // draws a rect, an arc and a polyline at the same rate
+  document.querySelectorAll('svg .ln').forEach(el=>el.setAttribute('pathLength',100));
 
   const stage=document.querySelector('.bp-stage');
-  const groups=[...document.querySelectorAll('.lay')];
-  const rows=[...document.querySelectorAll('.bp-lay')];
+  const scroll=document.getElementById('bpScroll');
   const real=document.getElementById('bpReal');
-  const count=document.getElementById('bpCount');
-  const K=document.getElementById('bpK'), T=document.getElementById('bpT'), D=document.getElementById('bpD');
-  let cur=null;
+  const K=document.getElementById('bpK'),T=document.getElementById('bpT'),D=document.getElementById('bpD');
+  const numEl=document.getElementById('bpNum'), phEl=document.getElementById('bpPhase');
+  const cross=document.getElementById('bpCross');
+  const cx=document.getElementById('cx'),cy=document.getElementById('cy'),cc=document.getElementById('cc');
+
+  // build the layer manager
+  const phEls={};
+  PHASES.filter(p=>p.layers.length).forEach((p,pi)=>{
+    const h=document.createElement('div');
+    h.className='bp-ph'; h.textContent=String(pi+1).padStart(2,'0')+' · '+p.n;
+    scroll.appendChild(h);
+    const rows=p.layers.map(name=>{
+      const r=document.createElement('div');
+      r.className='bp-row';
+      r.innerHTML='<span class="sw"></span>'+name;
+      scroll.appendChild(r); return r;
+    });
+    phEls[p.k]={head:h,rows,el:h};
+  });
+
+  // element counts come from the drawing itself, not a made-up figure
+  const counts={};
+  let running=0;
+  PHASES.forEach(p=>{
+    const g=document.querySelector(`.ph[data-k="${p.k}"]`);
+    running += g ? g.querySelectorAll('.ln,.dot,.fz,.hz').length : 0;
+    counts[p.k]=running;
+  });
+  const sheetG=document.querySelector('.ph.sheet');
+  const base=sheetG?sheetG.querySelectorAll('.ln,.dot,.fz').length:0;
+
+  let cur=null, numAnim=null;
+  function countTo(target){
+    cancelAnimationFrame(numAnim);
+    const from=parseInt(numEl.textContent,10)||0, t0=performance.now(), dur=650;
+    (function step(t){
+      const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
+      numEl.textContent=Math.round(from+(target-from)*e);
+      if(k<1) numAnim=requestAnimationFrame(step);
+    })(t0);
+  }
 
   function set(k){
     if(k===cur) return;
+    const idx=PHASES.findIndex(p=>p.k===k); if(idx<0) return;
+    const back = cur!==null && idx < PHASES.findIndex(p=>p.k===cur);
     cur=k;
     const built = k==='built';
 
-    // layer isolation — the base sheet stays legible under everything
-    groups.forEach(g=>g.classList.toggle('on', built ? true : g.dataset.k===k));
-    rows.forEach(r=>r.classList.toggle('on', built ? true : r.dataset.k===k));
+    // phases already passed stay on the sheet; the active one is bright
+    PHASES.forEach((p,i)=>{
+      const g=document.querySelector(`.ph[data-k="${p.k}"]`);
+      if(!g) return;
+      g.classList.remove('on','seen');
+      if(built || i<idx) g.classList.add('seen');
+      if(i===idx && !built) g.classList.add('on');
+      if(built) g.classList.add('seen');
+    });
+    if(built) document.querySelectorAll('.ph:not(.sheet)').forEach(g=>g.classList.add('seen'));
+
+    Object.entries(phEls).forEach(([pk,o])=>{
+      const pi=PHASES.findIndex(p=>p.k===pk);
+      const active = !built && pk===k;
+      o.head.classList.toggle('on', active);
+      o.rows.forEach(r=>r.classList.toggle('on', built || pi<idx || active));
+    });
+
+    // keep the active phase's layers in view in the manager
+    const o=phEls[k];
+    if(o) scroll.style.transform=`translateY(${-Math.max(0,o.head.offsetTop-14)}px)`;
+    else scroll.style.transform='translateY(0)';
+
     real.classList.toggle('on', built);
     stage.classList.toggle('built', built);
+    phEl.textContent = built ? '5/5' : (idx+1)+'/5';
+    countTo(base + (counts[k]||0));
 
-    const i=ORDER.indexOf(k);
-    count.textContent = built ? '08/08' : String(i+1).padStart(2,'0')+'/08';
+    // crosshair moves to wherever the drafting is happening
+    const [ax,ay]=PHASES[idx].at;
+    cross.classList.toggle('on', !built);
+    cx.setAttribute('y1',ay); cx.setAttribute('y2',ay);
+    cy.setAttribute('x1',ax); cy.setAttribute('x2',ax);
+    cc.setAttribute('cx',ax); cc.setAttribute('cy',ay);
 
     [K,T,D].forEach(el=>el.style.opacity=0);
     setTimeout(()=>{
-      const c=COPY[k];
-      K.textContent=c[0]; T.textContent=c[1]; D.textContent=c[2];
+      const p=PHASES[idx];
+      K.textContent = built ? 'Built' : `Phase ${idx+1} of 5 — ${p.n}`;
+      T.textContent=p.t; D.textContent=p.d;
       [K,T,D].forEach(el=>el.style.opacity=1);
-    },300);
+    },280);
   }
 
   const io=new IntersectionObserver(es=>{
     es.forEach(e=>{ if(e.isIntersecting) set(e.target.dataset.k); });
   },{rootMargin:'-45% 0px -45% 0px'});
   document.querySelectorAll('.bp-step').forEach(s=>io.observe(s));
-  set('design');
+  set('survey');
 })();
 </script>
 </body>
