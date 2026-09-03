@@ -70,6 +70,37 @@
   .th4 .d{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;transform:rotate(45deg);
     border:1.5px solid #fff;box-shadow:0 0 12px rgba(127,195,255,.85)}
 
+  /* 5 two tracks — hard split */
+  .th5 .hl{position:absolute;left:0;top:0;bottom:0;width:50%;
+    background:linear-gradient(90deg,rgba(255,154,77,.30),rgba(255,154,77,.10))}
+  .th5 .hr{position:absolute;right:0;top:0;bottom:0;width:50%;
+    background:linear-gradient(270deg,rgba(127,195,255,.30),rgba(127,195,255,.10))}
+  .th5 .sm{position:absolute;left:50%;top:8%;bottom:8%;width:1px;transform:translateX(-.5px);
+    background:linear-gradient(180deg,transparent,rgba(255,255,255,.75) 14%,rgba(255,255,255,.75) 86%,transparent)}
+  .th5 .d{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;transform:rotate(45deg);
+    border:1.5px solid #fff;background:#070a0e;box-shadow:0 0 14px rgba(255,255,255,.5)}
+  .th5 u{position:absolute;height:1px;background:rgba(255,255,255,.42);text-decoration:none}
+  .th5 u:nth-of-type(1){left:10%;width:22%;top:34%}
+  .th5 u:nth-of-type(2){left:10%;width:22%;top:50%}
+  .th5 u:nth-of-type(3){left:10%;width:22%;top:66%}
+  .th5 u:nth-of-type(4){right:10%;width:22%;top:34%}
+  .th5 u:nth-of-type(5){right:10%;width:22%;top:50%}
+  .th5 u:nth-of-type(6){right:10%;width:22%;top:66%}
+
+  /* featured (current direction) card */
+  .ch-feature{display:grid;grid-template-columns:1.15fr 1fr;margin-bottom:26px;
+    border:1px solid rgba(127,195,255,.42);background:rgba(10,15,23,.7);
+    transition:border-color .3s,transform .3s}
+  .ch-feature:hover{border-color:rgba(127,195,255,.75);transform:translateY(-3px)}
+  .ch-feature .ch-thumb{aspect-ratio:auto;border-bottom:none;border-right:1px solid var(--line)}
+  .ch-feature .ch-body{display:flex;flex-direction:column;justify-content:center}
+  .ch-flag{display:inline-block;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;
+    color:#050608;background:var(--accent);padding:5px 11px;border-radius:999px;margin-bottom:16px;align-self:flex-start}
+  .ch-sep{display:flex;align-items:center;gap:16px;margin:44px 0 26px;color:var(--faint);
+    font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:600}
+  .ch-sep::before,.ch-sep::after{content:"";flex:1;height:1px;background:var(--line)}
+  @media(max-width:820px){ .ch-feature{grid-template-columns:1fr} .ch-feature .ch-thumb{aspect-ratio:16/9;border-right:none;border-bottom:1px solid var(--line)} }
+
   .ch-body{padding:24px 26px 26px}
   .ch-body h2{font-size:clamp(17px,2vw,23px);font-weight:700;letter-spacing:-.01em}
   .ch-body h2 em{font-style:normal;color:var(--accent);font-weight:700;margin-right:10px}
@@ -114,9 +145,27 @@
   <div class="ch-head">
     <div class="eyebrow">Four Directions</div>
     <h1>Rethinking the home page</h1>
-    <p>Less star chart, more show. Each direction keeps the diamond, the eight disciplines and the "connect every dot" idea — but trades the drifting constellation for structure, and puts event imagery on the page so festivals, concerts, conferences and galas all read at a glance. The two markets are interleaved rather than split down the middle: both are named, neither gets its own side of the fence.</p>
+    <p>Less star chart, more show. Every direction keeps the diamond, the disciplines and the "connect every dot" idea — but trades the drifting constellation for structure, and puts the work on the page so festivals, concerts, conferences and galas all read at a glance.</p>
+    <p style="margin-top:16px"><b style="color:#e2e8f0;font-weight:600">Updated brief:</b> the two markets now get a <b style="color:#e2e8f0;font-weight:600">deliberate separation</b> rather than an interleave — say we do it all, while showing we understand that a festival and a general session are different jobs. Directions 01–04 below were built to the earlier "interleave, no hard line" brief and are kept for comparison.</p>
     <a class="cur" href="../index.html">← Compare against the current live site</a>
   </div>
+
+  <a class="ch-feature" href="05-two-tracks.html">
+    <div class="ch-thumb"><div class="th th5">
+      <div class="hl"></div><div class="hr"></div><div class="sm"></div>
+      <u></u><u></u><u></u><u></u><u></u><u></u><div class="d"></div>
+    </div><span class="n">05</span></div>
+    <div class="ch-body">
+      <span class="ch-flag">Current direction</span>
+      <h2><em>05</em>Two Tracks</h2>
+      <p class="say">A true 50/50 split with a drawn seam &mdash; <b style="color:#f4c9a3;font-weight:600">Live</b> on one side, <b style="color:#b9d6f2;font-weight:600">Corporate</b> on the other, each in its own vocabulary. The mark straddles the seam and is the only thing allowed to touch both worlds.</p>
+      <p class="note">Below the fold it pays the idea off: a <b style="color:#e2e8f0;font-weight:600">&quot;same discipline, different room&quot;</b> table runs Advance, Load-In, Power, Labor, Show Call and Load-Out through both worlds side by side &mdash; and the Events/Clients rosters split into two columns.</p>
+      <div class="ch-meta"><span class="hot">2 photos</span><span>Markets separated</span><span>Needs corporate proof</span></div>
+      <div class="ch-open">Open direction &rarr;</div>
+    </div>
+  </a>
+
+  <div class="ch-sep">Earlier brief &mdash; markets interleaved</div>
 
   <div class="ch-grid">
 

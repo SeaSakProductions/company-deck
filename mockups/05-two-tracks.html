@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SeaSak — 05 Two Tracks</title>
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  /* ============================================================
+     05 — TWO TRACKS
+     A deliberate, hard split. Not a blend: the two markets get
+     equal halves and a crisp seam, because pretending a festival
+     and a general session are the same job is the thing this
+     page is trying NOT to say. The mark straddles the seam and
+     is the only element allowed to touch both sides.
+     ============================================================ */
+
+  .tt-hero{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+
+  /* --- the two halves: exactly 50/50, no overlap --- */
+  .tt-half{position:absolute;top:0;bottom:0;width:50%;transition:opacity .45s ease,filter .45s ease}
+  .tt-half.l{left:0}
+  .tt-half.r{right:0}
+  /* darken from the OUTER edge inward, so the inner edge stays crisp
+     against the seam instead of feathering into the other world */
+  .tt-half::after{
+    content:"";position:absolute;inset:0;z-index:2;
+  }
+  .tt-half.l::after{background:linear-gradient(90deg,rgba(5,6,8,.80),rgba(5,6,8,.30) 52%,rgba(5,6,8,.72))}
+  .tt-half.r::after{background:linear-gradient(270deg,rgba(5,6,8,.80),rgba(5,6,8,.30) 52%,rgba(5,6,8,.72))}
+
+  /* --- the seam: a drawn line, not a gradient --- */
+  .tt-seam{
+    position:absolute;left:50%;top:0;bottom:0;width:1px;z-index:5;transform:translateX(-.5px);
+    background:linear-gradient(180deg,transparent,rgba(255,255,255,.42) 12%,rgba(255,255,255,.42) 88%,transparent);
+  }
+  .tt-seam::before,.tt-seam::after{
+    content:"";position:absolute;left:50%;width:9px;height:1px;transform:translateX(-50%);
+    background:rgba(255,255,255,.5);
+  }
+  .tt-seam::before{top:12%}
+  .tt-seam::after{bottom:12%}
+
+  /* --- market kickers, hard against the seam --- */
+  .tt-kicker{position:absolute;top:15vh;z-index:6;font-size:11px;letter-spacing:.34em;text-transform:uppercase;font-weight:700}
+  .tt-kicker .k{display:block;font-size:clamp(15px,2.1vw,22px);letter-spacing:.22em;margin-bottom:9px}
+  .tt-kicker small{display:block;font-size:9.5px;letter-spacing:.2em;color:var(--muted);font-weight:500;line-height:1.9}
+  .tt-kicker.l{right:52%;padding-right:34px;text-align:right;color:#f4c9a3}
+  .tt-kicker.r{left:52%;padding-left:34px;text-align:left;color:#b9d6f2}
+
+  /* --- content grid --- */
+  .tt-stage{
+    position:relative;z-index:7;width:100%;max-width:1240px;padding:0 5vw;
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(20px,4vw,60px);
+  }
+
+  /* --- each world's vocabulary, in parallel rows --- */
+  .tt-col{display:flex;flex-direction:column;gap:clamp(10px,1.9vh,20px)}
+  .tt-col.l{align-items:flex-end;text-align:right}
+  .tt-col.r{align-items:flex-start;text-align:left}
+  .tt-row{
+    display:flex;align-items:center;gap:13px;opacity:0;
+    animation:ttIn .7s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  .tt-col.l .tt-row{--from:-18px}   /* nub sits toward the seam, mirroring the right column */
+  .tt-col.r .tt-row{--from:18px}
+  .tt-row .lbl{font-size:clamp(11.5px,1.32vw,14.5px);letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:#dfe6ee;white-space:nowrap}
+  .tt-row .nub{width:5px;height:5px;border-radius:50%;flex:none}
+  .tt-col.l .nub{background:var(--warm);box-shadow:0 0 10px 1px rgba(255,154,77,.7)}
+  .tt-col.r .nub{background:var(--cool);box-shadow:0 0 10px 1px rgba(127,195,255,.7)}
+  .tt-row:nth-child(1){animation-delay:.40s}
+  .tt-row:nth-child(2){animation-delay:.50s}
+  .tt-row:nth-child(3){animation-delay:.60s}
+  .tt-row:nth-child(4){animation-delay:.70s}
+  .tt-row:nth-child(5){animation-delay:.80s}
+  @keyframes ttIn{to{opacity:1;transform:translateX(0)}}
+  .tt-row{transform:translateX(var(--from,0))}
+
+  /* --- the mark: the one thing that crosses the line --- */
+  .tt-core{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:clamp(300px,34vw,440px)}
+  .tt-mark{width:clamp(88px,11vw,140px);height:auto;overflow:visible;
+    filter:drop-shadow(0 0 20px rgba(255,154,77,.30)) drop-shadow(0 0 20px rgba(127,195,255,.30))}
+  .tt-mark .edge{fill:none;stroke:url(#ttSplit);stroke-width:2.2;
+    stroke-dasharray:230;stroke-dashoffset:230;animation:ttDraw 1.5s ease forwards .15s}
+  .tt-mark .edge.ring{stroke-dasharray:300;stroke-dashoffset:300}
+  @keyframes ttDraw{to{stroke-dashoffset:0}}
+  .tt-mark .pt{opacity:0;animation:ttPt .55s ease forwards}
+  .tt-mark .pt:nth-of-type(1){animation-delay:.95s}
+  .tt-mark .pt:nth-of-type(2){animation-delay:1.05s}
+  .tt-mark .pt:nth-of-type(3){animation-delay:1.15s}
+  .tt-mark .pt:nth-of-type(4){animation-delay:1.25s}
+  .tt-mark .pt.core{animation-delay:1.35s}
+  @keyframes ttPt{to{opacity:1}}
+
+  .tt-title{
+    margin-top:26px;font-size:clamp(24px,3.5vw,44px);font-weight:700;letter-spacing:-.022em;line-height:1.12;
+    background:linear-gradient(180deg,#fff,#9fa8b5);-webkit-background-clip:text;background-clip:text;color:transparent;
+    opacity:0;animation:ttUp .9s ease forwards 1.35s;
+  }
+  .tt-sub{
+    margin-top:18px;font-size:clamp(12.5px,1.38vw,15.5px);color:var(--muted);line-height:1.75;
+    opacity:0;animation:ttUp .9s ease forwards 1.55s;
+  }
+  .tt-sub b{color:#d7dee7;font-weight:600}
+  @keyframes ttUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+  /* --- lean: hovering one world dims the other, without merging them --- */
+  .tt-panel{position:absolute;top:0;bottom:0;width:50%;z-index:6}
+  .tt-panel.l{left:0}.tt-panel.r{right:0}
+  .tt-hero:has(.tt-panel.l:hover) .tt-half.r,
+  .tt-hero:has(.tt-panel.r:hover) .tt-half.l{opacity:.3;filter:saturate(.4)}
+  .tt-hero:has(.tt-panel.l:hover) .tt-col.r,
+  .tt-hero:has(.tt-panel.r:hover) .tt-col.l{opacity:.34}
+  .tt-hero:has(.tt-panel.l:hover) .tt-kicker.r,
+  .tt-hero:has(.tt-panel.r:hover) .tt-kicker.l{opacity:.34}
+  .tt-col,.tt-kicker{transition:opacity .4s ease}
+
+  /* ============================================================
+     THE PAYOFF — same discipline, different room
+     ============================================================ */
+  .tt-compare{padding:14vh 24px 12vh;border-top:1px solid var(--line)}
+  .tt-compare .cmp-head{text-align:center;margin-bottom:64px}
+  .tt-compare .cmp-head .eyebrow{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;font-weight:600}
+  .tt-compare .cmp-head h2{font-size:clamp(22px,3.2vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.15}
+  .tt-compare .cmp-head p{margin:20px auto 0;max-width:58ch;color:var(--muted);font-size:clamp(13.5px,1.5vw,16px);line-height:1.75}
+
+  .cmp{max-width:1000px;margin:0 auto;border-top:1px solid var(--line)}
+  .cmp-labels{display:grid;grid-template-columns:150px 1fr 1fr;gap:0;padding:16px 0 14px;border-bottom:1px solid var(--line)}
+  .cmp-labels span{font-size:10px;letter-spacing:.28em;text-transform:uppercase;font-weight:700}
+  .cmp-labels .a{color:var(--faint)}
+  .cmp-labels .b{color:#f4c9a3;padding-left:24px}
+  .cmp-labels .c{color:#b9d6f2;padding-left:24px}
+  .cmp-row{display:grid;grid-template-columns:150px 1fr 1fr;border-bottom:1px solid var(--line);transition:background .3s}
+  .cmp-row:hover{background:rgba(255,255,255,.017)}
+  .cmp-row .disc{padding:24px 0;font-size:13.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:#e2e8f0}
+  .cmp-row .live,.cmp-row .corp{padding:24px 0 24px 24px;font-size:14px;color:var(--muted);line-height:1.6;position:relative}
+  .cmp-row .live::before,.cmp-row .corp::before{
+    content:"";position:absolute;left:0;top:26px;width:4px;height:4px;border-radius:50%;
+  }
+  .cmp-row .live::before{background:rgba(255,154,77,.6)}
+  .cmp-row .corp::before{background:rgba(127,195,255,.6)}
+
+  /* ============================================================
+     SPLIT PROOF
+     ============================================================ */
+  .tt-proof{padding:0 24px 16vh}
+  .tt-proof .pr-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1px 1fr;gap:0}
+  .tt-proof .pr-rule{background:var(--line)}
+  .tt-proof .pr-col{padding:0 40px}
+  .tt-proof .pr-col:first-child{padding-left:0}
+  .tt-proof .pr-col:last-child{padding-right:0}
+  .tt-proof .pr-label{font-size:11px;letter-spacing:.34em;text-transform:uppercase;font-weight:700;margin-bottom:30px}
+  .tt-proof .pr-col.live .pr-label{color:#f4c9a3}
+  .tt-proof .pr-col.corp .pr-label{color:#b9d6f2}
+  .tt-proof .pr-wall{display:flex;flex-wrap:wrap;gap:9px}
+  .tt-proof .pr-wall span{
+    font-size:13px;letter-spacing:.03em;color:#cbd3dc;padding:9px 15px;
+    border:1px solid var(--line);border-radius:999px;transition:border-color .25s,color .25s;
+  }
+  .tt-proof .pr-col.live .pr-wall span:hover{border-color:rgba(255,154,77,.45);color:#fff}
+  .tt-proof .pr-col.corp .pr-wall span:hover{border-color:rgba(127,195,255,.45);color:#fff}
+  .tt-proof .pr-sub{margin-top:34px;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:18px}
+  .tt-proof .todo span{border-style:dashed;border-color:rgba(127,195,255,.30);color:var(--faint)}
+  .tt-proof .pr-note{
+    margin-top:26px;font-size:12.5px;line-height:1.7;color:var(--faint);
+    border-left:2px solid rgba(127,195,255,.35);padding-left:14px;
+  }
+
+  /* ============================================================
+     MOBILE — the split becomes a stack, seam becomes a rule
+     ============================================================ */
+  @media(max-width:900px){
+    .tt-hero{min-height:100svh;padding:12vh 0 8vh}
+    .tt-half{width:100%;height:50%;left:0;right:auto}
+    .tt-half.l{top:0;bottom:auto}
+    .tt-half.r{top:50%;bottom:auto}
+    .tt-half.l::after{background:linear-gradient(180deg,rgba(5,6,8,.72),rgba(5,6,8,.34) 50%,rgba(5,6,8,.80))}
+    .tt-half.r::after{background:linear-gradient(0deg,rgba(5,6,8,.72),rgba(5,6,8,.34) 50%,rgba(5,6,8,.80))}
+    .tt-seam{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px;transform:none;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.42) 12%,rgba(255,255,255,.42) 88%,transparent)}
+    .tt-seam::before{top:auto;left:12%;width:1px;height:9px}
+    .tt-seam::after{bottom:auto;top:-4px;left:88%;width:1px;height:9px}
+    .tt-panel{display:none}
+    .tt-stage{grid-template-columns:1fr;gap:26px;padding:0 22px}
+    .tt-kicker{position:static;text-align:center !important;padding:0 !important;top:auto}
+    .tt-kicker.l{order:1}
+    .tt-core{order:2}
+    .tt-kicker.r{order:4}
+    .tt-col.l{order:1}
+    .tt-col.r{order:3}
+    .tt-col{align-items:center !important;text-align:center !important;
+      flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px 10px}
+    .tt-col.l .tt-row,.tt-col.r .tt-row{flex-direction:row;gap:8px;--from:0}
+    .tt-row .lbl{font-size:10.5px;letter-spacing:.1em;padding:6px 11px;border:1px solid var(--line);border-radius:999px}
+    .tt-title{font-size:clamp(21px,6.2vw,30px);margin-top:20px}
+    .tt-sub{font-size:13px}
+    .cmp-labels,.cmp-row{grid-template-columns:1fr}
+    .cmp-labels .a{display:none}
+    .cmp-labels .b,.cmp-labels .c{padding-left:0}
+    .cmp-row{padding:8px 0 16px}
+    .cmp-row .disc{padding:18px 0 6px}
+    .cmp-row .live,.cmp-row .corp{padding:8px 0 8px 18px}
+    .cmp-row .live::before,.cmp-row .corp::before{top:16px}
+    .tt-proof .pr-grid{grid-template-columns:1fr;gap:0}
+    .tt-proof .pr-rule{height:1px;margin:52px 0}
+    .tt-proof .pr-col{padding:0 !important}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="SeaSak Productions">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.45)" stroke-width="1" fill="none">
+        <path d="M13 2 L24 13 L13 24 L2 13 Z"/><path d="M13 2 L13 24 M2 13 L24 13"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="13" cy="2" r="1.7"/><circle cx="24" cy="13" r="1.7"/>
+        <circle cx="13" cy="24" r="1.7"/><circle cx="2" cy="13" r="1.7"/><circle cx="13" cy="13" r="2"/>
+      </g>
+    </svg>
+    <span class="b-text"><span class="b-name">SEASAK PRODUCTIONS</span><span class="b-tag">Event Solutions</span></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#compare">How We Work</a><a href="#events">Events</a><a href="#clients">Clients</a>
+    <a class="cta" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#compare">How We Work</a><a href="#events">Events</a><a href="#clients">Clients</a>
+  <a href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">Contact</a>
+</div>
+
+<!-- ================= HERO — TWO TRACKS ================= -->
+<section class="tt-hero" id="top">
+  <div class="tt-half l slot slot--soft slot--music slot--stage"   aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="tt-half r slot slot--soft slot--corp  slot--keynote" aria-hidden="true"><div class="slot__ph"></div></div>
+  <div class="tt-seam" aria-hidden="true"></div>
+
+  <div class="tt-panel l" aria-hidden="true"></div>
+  <div class="tt-panel r" aria-hidden="true"></div>
+
+  <div class="tt-kicker l"><span class="k">Live</span><small>Festivals · Concerts · Touring · Fairs</small></div>
+  <div class="tt-kicker r"><span class="k">Corporate</span><small>Conferences · Galas · Activations · Private</small></div>
+
+  <div class="tt-stage">
+    <div class="tt-col l">
+      <div class="tt-row"><span class="lbl">Main Stage &amp; Roof</span><span class="nub"></span></div>
+      <div class="tt-row"><span class="lbl">Generators &amp; Distro</span><span class="nub"></span></div>
+      <div class="tt-row"><span class="lbl">Truck Routing &amp; Yard</span><span class="nub"></span></div>
+      <div class="tt-row"><span class="lbl">Stagehand Calls</span><span class="nub"></span></div>
+      <div class="tt-row"><span class="lbl">Artist Advance</span><span class="nub"></span></div>
+    </div>
+
+    <div class="tt-core">
+      <svg class="tt-mark" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <!-- the hard stop sits exactly on the seam: half the mark in each world -->
+          <linearGradient id="ttSplit" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="50%" stop-color="#ff9a4d"/>
+            <stop offset="50%" stop-color="#7fc3ff"/>
+          </linearGradient>
+        </defs>
+        <path class="edge ring" d="M60 8 L112 60 L60 112 L8 60 Z"/>
+        <path class="edge" d="M60 8 L60 112"/><path class="edge" d="M8 60 L112 60"/>
+        <circle class="pt" cx="60" cy="8"  r="5" fill="#fff"/>
+        <circle class="pt" cx="112" cy="60" r="5" fill="#7fc3ff"/>
+        <circle class="pt" cx="60" cy="112" r="5" fill="#fff"/>
+        <circle class="pt" cx="8"  cy="60" r="5" fill="#ff9a4d"/>
+        <circle class="pt core" cx="60" cy="60" r="6.5" fill="#fff"/>
+      </svg>
+      <h1 class="tt-title">Two worlds.<br>One crew.</h1>
+      <p class="tt-sub">A festival is not a general session. Different clocks, different rooms, different ways to fail. <b>We run both</b> — and we plan them like the different animals they are.</p>
+    </div>
+
+    <div class="tt-col r">
+      <div class="tt-row"><span class="nub"></span><span class="lbl">General Session &amp; Set</span></div>
+      <div class="tt-row"><span class="nub"></span><span class="lbl">House Power &amp; Tie-In</span></div>
+      <div class="tt-row"><span class="nub"></span><span class="lbl">Freight &amp; Case Logistics</span></div>
+      <div class="tt-row"><span class="nub"></span><span class="lbl">Badged Crew &amp; Stewards</span></div>
+      <div class="tt-row"><span class="nub"></span><span class="lbl">Speaker Advance</span></div>
+    </div>
+  </div>
+
+  <div class="scroll-hint"><span>Scroll</span><span class="dot"></span></div>
+</section>
+
+<!-- ================= THE PAYOFF ================= -->
+<section class="tt-compare" id="compare">
+  <div class="cmp-head reveal">
+    <div class="eyebrow">How We Work</div>
+    <h2>Same discipline. Different room.</h2>
+    <p>The disciplines don't change. What changes is the clock, the building, and what happens when something goes wrong. Knowing that difference is the job.</p>
+  </div>
+
+  <div class="cmp reveal">
+    <div class="cmp-labels">
+      <span class="a">Discipline</span><span class="b">Live</span><span class="c">Corporate</span>
+    </div>
+    <div class="cmp-row">
+      <div class="disc">Advance</div>
+      <div class="live">Riders, tech packs, day sheets, festival patch</div>
+      <div class="corp">Run of show, speaker prep, AV specs, rehearsal blocks</div>
+    </div>
+    <div class="cmp-row">
+      <div class="disc">Load-In</div>
+      <div class="live">Trucks into a field, yard control, weather windows</div>
+      <div class="corp">Cases down a service corridor, freight elevators, dock slots</div>
+    </div>
+    <div class="cmp-row">
+      <div class="disc">Power</div>
+      <div class="live">Generators, distro, redundancy with no building behind you</div>
+      <div class="corp">House tie-in, UPS on the keynote, nothing dark on camera</div>
+    </div>
+    <div class="cmp-row">
+      <div class="disc">Labor</div>
+      <div class="live">Stagehand calls, forklifts, stewards, overnight pushes</div>
+      <div class="corp">Badged crew, quiet hours, house rules, guests in the room</div>
+    </div>
+    <div class="cmp-row">
+      <div class="disc">Show Call</div>
+      <div class="live">One shot at showtime, 20-minute changeovers</div>
+      <div class="corp">Cued to the minute, room turns between sessions</div>
+    </div>
+    <div class="cmp-row">
+      <div class="disc">Load-Out</div>
+      <div class="live">Stage down under work light, gone by morning</div>
+      <div class="corp">Ballroom stripped and reset before breakfast service</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPLIT PROOF ================= -->
+<section class="tt-proof" id="events">
+  <div class="pr-grid">
+    <div class="pr-col live reveal">
+      <div class="pr-label">Live — Selected Events</div>
+      <div class="pr-wall">
+        <span>BottleRock</span><span>Lollapalooza</span><span>Boston Calling</span><span>Shakey Knees</span>
+        <span>NFL Draft</span><span>Minnesota State Fair</span><span>Innings &amp; Extra Innings</span>
+        <span>Milwaukee Metal Fest</span><span>Point Break Fest</span>
+      </div>
+      <div class="pr-sub" id="clients">Live — Clients</div>
+      <div class="pr-wall">
+        <span>AEG</span><span>Live Nation</span><span>C3 Presents</span><span>Danny Wimmer Presents</span>
+        <span>The Production Collective</span><span>Tristar Production Group</span><span>RockForce</span>
+        <span>Clearwing</span><span>Clair Brothers</span><span>4Wall</span>
+      </div>
+    </div>
+
+    <div class="pr-rule" aria-hidden="true"></div>
+
+    <div class="pr-col corp reveal">
+      <div class="pr-label">Corporate — Selected Events</div>
+      <div class="pr-wall todo">
+        <span>Event name</span><span>Event name</span><span>Event name</span>
+        <span>Event name</span><span>Event name</span><span>Event name</span>
+      </div>
+      <div class="pr-sub">Corporate — Clients</div>
+      <div class="pr-wall todo">
+        <span>Client</span><span>Client</span><span>Client</span>
+        <span>Client</span><span>Client</span><span>Client</span>
+      </div>
+      <p class="pr-note">Placeholder. A hard split only works if this column can stand on its own — six or so real corporate events and clients. Until it's filled, direction 01 (crossfade) hides the imbalance and this one exposes it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact">
+  <h2 class="reveal">Bring us the date.<br><span>We'll bring the show.</span></h2>
+  <a class="mailto reveal" href="mailto:joe@seasakproductions.com?subject=Event%20Inquiry">joe@seasakproductions.com</a>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="mark">SEASAK PRODUCTIONS</div>
+    <div class="meta">Event Solutions</div>
+  </div>
+</footer>
+
+<div class="mk-badge">Mockup <b>5</b> · Two Tracks <a href="index.html">All directions →</a></div>
+
+<script src="_shared.js"></script>
+</body>
+</html>
